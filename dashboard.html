@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard | Kita</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Kita.
+        </div>
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Beranda
+            </a>
+
+            <button
+                class="btn"
+                id="logout-btn"
+            >
+                Keluar
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <main class="dashboard">
+
+        <div class="container">
+
+
+            <div class="dashboard-header">
+
+                <div>
+
+                    <h1>
+                        Cerita kita
+                    </h1>
+
+                    <p>
+                        Tambahkan kenangan baru.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-box">
+
+                <h2 id="form-title">
+                    Tambah kenangan
+                </h2>
+
+
+                <form id="memory-form">
+
+                    <input
+                        type="hidden"
+                        id="memory-id"
+                    >
+
+
+                    <input
+                        type="hidden"
+                        id="old-image-path"
+                    >
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Judul kenangan
+                        </label>
+
+                        <input
+                            type="text"
+                            id="title"
+                            placeholder="Contoh: Hari pertama kita bertemu"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Tanggal
+                        </label>
+
+                        <input
+                            type="date"
+                            id="event-date"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Cerita
+                        </label>
+
+                        <textarea
+                            id="story"
+                            placeholder="Tulis cerita tentang kenangan ini..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Foto
+                        </label>
+
+                        <input
+                            type="file"
+                            id="photo"
+                            accept="image/*"
+                        >
+
+                        <img
+                            id="preview"
+                            class="preview-image"
+                            style="display:none;"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn"
+                    >
+                        Simpan cerita
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancel-btn"
+                        style="display:none;"
+                    >
+                        Batal edit
+                    </button>
+
+                </form>
+
+
+                <div
+                    class="message"
+                    id="form-message"
+                ></div>
+
+            </div>
+
+
+            <h2 class="section-title">
+                Semua kenangan
+            </h2>
+
+
+            <div
+                class="memory-grid"
+                id="dashboard-list"
+            >
+                Memuat...
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="config.js"></script>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

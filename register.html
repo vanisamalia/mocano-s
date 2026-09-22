@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Register | Our Little Album</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body class="auth-page">
+
+
+    <div class="auth-container">
+
+
+        <!-- KEMBALI -->
+
+        <a
+            href="index.html"
+            class="back-home"
+        >
+            ← Back to our album
+        </a>
+
+
+        <!-- REGISTER -->
+
+        <div class="auth-box">
+
+            <p class="small-title">
+                OUR LITTLE ALBUM
+            </p>
+
+            <h1>
+                Create an account.
+            </h1>
+
+            <p class="auth-description">
+                Buat akun untuk mulai menyimpan
+                cerita dan kenangan kita.
+            </p>
+
+
+            <form id="register-form">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="register-email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="register-email"
+                        placeholder="your@email.com"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="register-password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="register-password"
+                        placeholder="Minimal 6 karakter"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirm-password">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        placeholder="Ulangi password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-button"
+                >
+                    Create Account
+                </button>
+
+
+            </form>
+
+
+            <p
+                id="register-message"
+                class="auth-message"
+            ></p>
+
+
+            <p class="auth-switch">
+
+                Sudah punya akun?
+
+                <a href="login.html">
+                    Login here
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+
+
+</body>
+
+</html>

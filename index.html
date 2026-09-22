@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MOCANO'S</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            MOCANO'S
+        </div>
+
+
+        <nav>
+
+            <a href="#home">
+                Home
+            </a>
+
+            <a href="#memories">
+                Memories
+            </a>
+
+            <a href="#about">
+                About Us
+            </a>
+
+
+            <!-- BELUM LOGIN -->
+
+            <a
+                href="login.html"
+                class="login-button"
+                id="login-link"
+            >
+                Login
+            </a>
+
+
+            <!-- SUDAH LOGIN -->
+
+            <div
+                class="profile-menu"
+                id="profile-menu"
+                style="display: none;"
+            >
+
+                <button
+                    type="button"
+                    class="profile-button"
+                    id="profile-button"
+                >
+                    Profile
+                    <span class="profile-arrow">
+                        ▼
+                    </span>
+                </button>
+
+
+                <div
+                    class="profile-dropdown"
+                    id="profile-dropdown"
+                >
+
+                    <button
+                        type="button"
+                        id="logout-btn"
+                    >
+                        Logout
+                    </button>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section
+        class="hero"
+        id="home"
+    >
+
+        <div class="hero-content">
+
+            <p class="small-title">
+                MOCANO FILES
+            </p>
+
+            <h1>
+                Where every day <br>
+                becomes a <br>
+                piece of us.
+            </h1>
+
+            <p class="hero-description">
+                A little place for the moments we share, 
+                the memories we keep, 
+                and all the days still waiting for us.
+            </p>
+
+            <a
+                href="#memories"
+                class="main-button"
+            >
+                Explore Our Memories
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         MEMORIES
+    ========================== -->
+
+    <section class="memories" id="memories">
+
+    <div class="memories-header">
+
+        <div class="section-heading">
+
+            <p class="small-title">
+                MOCANO's MEMORIES
+            </p>
+
+            <h2>
+                Where our moments find a place to stay.
+            </h2>
+
+            <p>
+                It’s never about how many moments we have,
+                but how each one leaves a little piece of us behind -
+                a little story, a quiet feeling, a memory that stays,
+                long after the day has passed.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        class="memory-actions"
+        id="memory-actions"
+        style="display: none;"
+    >
+        <button
+            type="button"
+            class="main-button"
+            id="add-memory-btn"
+        >
+            + Add Memory
+        </button>
+    </div>
+
+    <div
+        class="memory-container"
+        id="memory-list"
+    >
+        <p class="memory-loading">
+            Memuat memories...
+        </p>
+    </div>
+
+</section>
+
+
+    <!-- =========================
+         ABOUT
+    ========================== -->
+
+    <section
+        class="about"
+        id="about"
+    >
+
+        <div class="about-content">
+
+            <p class="small-title">
+                ABOUT US
+            </p>
+
+            <h2>
+                For the moments<br>
+                we don't want to forget, and counting.
+            </h2>
+
+            <p>
+                A little corner of our story, kept here.
+For the photographs we’ll look back on,
+the stories we’ll read again,
+and the little moments that remind us
+of where it all began.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         MEMORY MODAL
+    ========================== -->
+
+    <div
+        class="memory-modal"
+        id="memory-modal"
+        style="display: none;"
+    >
+
+        <div class="memory-modal-overlay"></div>
+
+
+        <div class="memory-modal-box">
+
+            <button
+                type="button"
+                class="modal-close"
+                id="modal-close"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <p class="small-title">
+                OUR LITTLE ALBUM
+            </p>
+
+            <h2 id="modal-title">
+                Add New Memory
+            </h2>
+
+
+            <form id="memory-form">
+
+
+                <!-- ID MEMORY -->
+
+                <input
+                    type="hidden"
+                    id="memory-id"
+                >
+
+
+                <!-- OLD IMAGE PATH -->
+
+                <input
+                    type="hidden"
+                    id="old-image-path"
+                >
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Judul kenangan
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        placeholder="Contoh: Hari pertama kita bertemu"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label for="event-date">
+                        Tanggal
+                    </label>
+
+                    <input
+                        type="date"
+                        id="event-date"
+                    >
+
+                </div>
+
+
+                <!-- STORY -->
+
+                <div class="form-group">
+
+                    <label for="story">
+                        Cerita
+                    </label>
+
+                    <textarea
+                        id="story"
+                        placeholder="Tulis cerita tentang kenangan ini..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PHOTO -->
+
+                <div class="form-group">
+
+                    <label for="photo">
+                        Foto
+                    </label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        accept="image/*"
+                    >
+
+
+                    <!-- PREVIEW FOTO -->
+
+                    <div
+                        class="photo-preview-container"
+                        id="photo-preview-container"
+                        style="display: none;"
+                    >
+
+                        <img
+                            id="preview"
+                            class="preview-image"
+                            alt="Preview foto"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM MESSAGE -->
+
+                <div
+                    class="message"
+                    id="form-message"
+                ></div>
+
+
+                <!-- FORM BUTTONS -->
+
+                <div class="modal-actions">
+
+                    <button
+                        type="submit"
+                        class="btn"
+                        id="save-memory-btn"
+                    >
+                        Save Memory
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancel-btn"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <p>
+            Made with love for our little memories.
+        </p>
+
+        <p>
+            © 2026 MOCANO'
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================
+         SUPABASE
+    ========================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="config.js"></script>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
