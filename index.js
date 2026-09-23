@@ -1,517 +1,231 @@
-// =========================
-// STATE
-// =========================
+/* =========================================================
+   MOCANO FILES
+   INDEX.JS
+========================================================= */
+
+
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
+
+const memoryList = document.getElementById("memory-list");
+const memoryActions = document.getElementById("memory-actions");
+const addMemoryBtn = document.getElementById("add-memory-btn");
+
+const memoryModal = document.getElementById("memory-modal");
+const memoryForm = document.getElementById("memory-form");
+
+const modalClose = document.getElementById("modal-close");
+const cancelBtn = document.getElementById("cancel-btn");
+
+const memoryTitle = document.getElementById("title");
+const memoryStory = document.getElementById("story");
+const memoryDate = document.getElementById("event-date");
+const memoryImage = document.getElementById("photo");
+
+const imagePreview = document.getElementById("photo-preview-container");
+
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 let currentUser = null;
 let editingMemory = null;
+let selectedFiles = [];
+let selectedDetailMemory = null;
 
 
-// =========================
-// ELEMENTS
-// =========================
-
-const loginLink =
-    document.getElementById("login-link");
-
-const profileMenu =
-    document.getElementById("profile-menu");
-
-const profileButton =
-    document.getElementById("profile-button");
-
-const profileDropdown =
-    document.getElementById("profile-dropdown");
-
-const logoutBtn =
-    document.getElementById("logout-btn");
-
-const memoryActions =
-    document.getElementById("memory-actions");
-
-const addMemoryBtn =
-    document.getElementById("add-memory-btn");
-
-const memoryList =
-    document.getElementById("memory-list");
-
-const memoryModal =
-    document.getElementById("memory-modal");
-
-const modalClose =
-    document.getElementById("modal-close");
-
-const cancelBtn =
-    document.getElementById("cancel-btn");
-
-const memoryForm =
-    document.getElementById("memory-form");
-
-const modalTitle =
-    document.getElementById("modal-title");
-
-const formMessage =
-    document.getElementById("form-message");
-
-const memoryIdInput =
-    document.getElementById("memory-id");
-
-const oldImagePathInput =
-    document.getElementById("old-image-path");
-
-const titleInput =
-    document.getElementById("title");
-
-const eventDateInput =
-    document.getElementById("event-date");
-
-const storyInput =
-    document.getElementById("story");
-
-const photoInput =
-    document.getElementById("photo");
-
-const preview =
-    document.getElementById("preview");
-
-const photoPreviewContainer =
-    document.getElementById("photo-preview-container");
-
-
-// =========================
-// AUTH
-// =========================
+/* =========================================================
+   AUTHENTICATION
+========================================================= */
 
 async function checkUser() {
 
-    const { data, error } =
-        await db.auth.getUser();
+    try {
 
-    if (error) {
-
-        console.error(
-            "Gagal mengambil user:",
+        const {
+            data,
             error
-        );
-
-        currentUser = null;
-
-    } else {
-
-        currentUser =
-            data?.user || null;
-
-    }
-
-    updateNavbar();
-
-    await loadMemories();
-
-}
-
-
-// =========================
-// UPDATE NAVBAR
-// =========================
-
-function updateNavbar() {
-
-    if (currentUser) {
-
-        // Sudah login
-        loginLink.style.display = "none";
-
-        profileMenu.style.display = "block";
-
-        memoryActions.style.display = "flex";
-
-    } else {
-
-        // Belum login
-        loginLink.style.display = "inline-flex";
-
-        profileMenu.style.display = "none";
-
-        memoryActions.style.display = "none";
-
-        closeProfileDropdown();
-    }
-
-}
-
-
-// =========================
-// PROFILE DROPDOWN
-// =========================
-
-profileButton.addEventListener(
-    "click",
-    function (event) {
-
-        event.stopPropagation();
-
-        profileDropdown.classList.toggle(
-            "show"
-        );
-
-    }
-);
-
-
-document.addEventListener(
-    "click",
-    function (event) {
-
-        if (
-            !profileMenu.contains(event.target)
-        ) {
-
-            closeProfileDropdown();
-
-        }
-
-    }
-);
-
-
-function closeProfileDropdown() {
-
-    profileDropdown.classList.remove(
-        "show"
-    );
-
-}
-
-
-// =========================
-// LOGOUT
-// =========================
-
-logoutBtn.addEventListener(
-    "click",
-    async function () {
-
-        const { error } =
-            await db.auth.signOut();
+        } = await db.auth.getUser();
 
         if (error) {
 
             console.error(
-                "Logout gagal:",
+                "Gagal mendapatkan user:",
                 error
             );
 
-            return;
+            currentUser = null;
+
+        } else {
+
+            currentUser =
+                data?.user || null;
         }
-
-        currentUser = null;
-
-        closeProfileDropdown();
 
         updateNavbar();
 
         await loadMemories();
 
+    } catch (error) {
+
+        console.error(
+            "Error checkUser:",
+            error
+        );
+
+        currentUser = null;
+
+        updateNavbar();
+
+        await loadMemories();
+    }
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+function updateNavbar() {
+
+    const profileMenu =
+        document.getElementById("profile-menu");
+
+    const loginLink =
+        document.getElementById("login-link");
+
+    const registerLink =
+        document.getElementById("register-link");
+
+    const logoutBtn =
+        document.getElementById("logout-btn");
+
+
+    if (currentUser) {
+
+        if (profileMenu) {
+            profileMenu.style.display = "block";
+        }
+
+        if (loginLink) {
+            loginLink.style.display = "none";
+        }
+
+        if (registerLink) {
+            registerLink.style.display = "none";
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.display = "block";
+        }
+
+        if (memoryActions) {
+            memoryActions.style.display = "flex";
+        }
+
+    } else {
+
+        if (profileMenu) {
+            profileMenu.style.display = "none";
+        }
+
+        if (loginLink) {
+            loginLink.style.display = "block";
+        }
+
+        if (registerLink) {
+            registerLink.style.display = "block";
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.display = "none";
+        }
+
+        if (memoryActions) {
+            memoryActions.style.display = "none";
+        }
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+   Menggunakan event delegation supaya tetap bekerja
+   walaupun tombol logout muncul/diperbarui secara dinamis.
+========================================================= */
+
+document.addEventListener(
+    "click",
+    async function (event) {
+
+        const logoutTarget =
+            event.target.closest("#logout-btn");
+
+        if (!logoutTarget) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!currentUser) {
+            return;
+        }
+
+        try {
+
+            logoutTarget.style.pointerEvents =
+                "none";
+
+            const {
+                error
+            } = await db.auth.signOut();
+
+            if (error) {
+
+                console.error(
+                    "Gagal logout:",
+                    error
+                );
+
+                alert(
+                    "Gagal logout."
+                );
+
+                logoutTarget.style.pointerEvents =
+                    "";
+
+                return;
+            }
+
+            currentUser = null;
+
+            updateNavbar();
+
+            await loadMemories();
+
+        } catch (error) {
+
+            console.error(
+                "Error logout:",
+                error
+            );
+
+            alert(
+                "Terjadi kesalahan saat logout."
+            );
+
+            logoutTarget.style.pointerEvents =
+                "";
+        }
     }
 );
 
 
-// =========================
-// LOAD MEMORIES
-// =========================
-
-async function loadMemories() {
-
-    memoryList.innerHTML =
-        `<p class="memory-loading">
-            Memuat memories...
-        </p>`;
-
-
-    const { data, error } =
-        await db
-            .from("memories")
-            .select("*")
-            .order(
-                "event_date",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (error) {
-
-        console.error(error);
-
-        memoryList.innerHTML =
-            `<p class="memory-error">
-                Gagal memuat cerita.
-            </p>`;
-
-        return;
-    }
-
-
-    if (!data || data.length === 0) {
-
-        memoryList.innerHTML =
-            `<div class="memory-empty">
-                <p>Belum ada kenangan.</p>
-            </div>`;
-
-        return;
-    }
-
-
-    memoryList.innerHTML = "";
-
-
-    for (const memory of data) {
-
-        const card =
-            await createMemoryCard(memory);
-
-        memoryList.appendChild(card);
-
-    }
-
-}
-
-
-// =========================
-// CREATE MEMORY CARD
-// =========================
-
-async function createMemoryCard(memory) {
-
-    const card =
-        document.createElement("div");
-
-    card.className =
-        "memory-card";
-
-
-    // =========================
-    // IMAGE
-    // =========================
-
-    const imageContainer =
-        document.createElement("div");
-
-    imageContainer.className =
-        "memory-image";
-
-
-    if (memory.image_path) {
-
-        const imageUrl =
-            await getMemoryImageUrl(
-                memory.image_path
-            );
-
-
-        if (imageUrl) {
-
-            const image =
-                document.createElement("img");
-
-            image.src =
-                imageUrl;
-
-            image.alt =
-                memory.title || "Memory";
-
-            image.loading =
-                "lazy";
-
-            imageContainer.appendChild(
-                image
-            );
-
-        } else {
-
-            imageContainer.innerHTML =
-                `<div class="image-placeholder">
-                    Photo
-                </div>`;
-
-        }
-
-    } else if (memory.image_url) {
-
-        // Fallback jika ada data lama
-        // yang masih menggunakan image_url
-
-        const image =
-            document.createElement("img");
-
-        image.src =
-            memory.image_url;
-
-        image.alt =
-            memory.title || "Memory";
-
-        image.loading =
-            "lazy";
-
-        imageContainer.appendChild(
-            image
-        );
-
-    } else {
-
-        imageContainer.innerHTML =
-            `<div class="image-placeholder">
-                Photo
-            </div>`;
-
-    }
-
-
-    // =========================
-    // CONTENT
-    // =========================
-
-    const content =
-        document.createElement("div");
-
-    content.className =
-        "memory-content";
-
-
-    const date =
-        formatDate(
-            memory.event_date
-        );
-
-
-    content.innerHTML = `
-
-        <p class="memory-date">
-            ${escapeHtml(
-                date.toUpperCase()
-            )}
-        </p>
-
-        <h3>
-            ${escapeHtml(
-                memory.title || ""
-            )}
-        </h3>
-
-        <p class="memory-story">
-            ${escapeHtml(
-                memory.story || ""
-            )}
-        </p>
-
-    `;
-
-
-    // =========================
-    // CRUD BUTTONS
-    // =========================
-
-    /*
-        Tombol Edit/Delete hanya ditampilkan
-        untuk memory milik user yang sedang login.
-    */
-
-    if (
-        currentUser &&
-        memory.created_by === currentUser.id
-    ) {
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "memory-card-actions";
-
-
-        const editButton =
-            document.createElement("button");
-
-        editButton.type =
-            "button";
-
-        editButton.className =
-            "memory-edit-btn";
-
-        editButton.textContent =
-            "Edit";
-
-
-        editButton.addEventListener(
-            "click",
-            function () {
-
-                editMemory(
-                    memory.id
-                );
-
-            }
-        );
-
-
-        const deleteButton =
-            document.createElement("button");
-
-        deleteButton.type =
-            "button";
-
-        deleteButton.className =
-            "memory-delete-btn";
-
-        deleteButton.textContent =
-            "Delete";
-
-
-        deleteButton.addEventListener(
-            "click",
-            function () {
-
-                deleteMemory(
-                    memory.id,
-                    memory.image_path
-                );
-
-            }
-        );
-
-
-        actions.appendChild(
-            editButton
-        );
-
-        actions.appendChild(
-            deleteButton
-        );
-
-        content.appendChild(
-            actions
-        );
-
-    }
-
-
-    card.appendChild(
-        imageContainer
-    );
-
-    card.appendChild(
-        content
-    );
-
-
-    return card;
-
-}
-
-
-// =========================
-// GET STORAGE IMAGE URL
-// =========================
+/* =========================================================
+   GET MEMORY IMAGE URL
+========================================================= */
 
 async function getMemoryImageUrl(
     imagePath
@@ -521,318 +235,1618 @@ async function getMemoryImageUrl(
         return null;
     }
 
+    try {
 
-    const { data, error } =
-        await db.storage
+        /*
+         * Gunakan signed URL karena bucket
+         * memory-photos dapat bersifat private.
+         */
+
+        const {
+            data,
+            error
+        } = await db.storage
             .from("memory-photos")
             .createSignedUrl(
                 imagePath,
-                60 * 60
+                3600
             );
 
+        if (
+            !error &&
+            data?.signedUrl
+        ) {
 
-    if (error) {
+            return data.signedUrl;
+        }
+
+
+        /*
+         * Fallback ke public URL.
+         */
+
+        const {
+            data: publicData
+        } = db.storage
+            .from("memory-photos")
+            .getPublicUrl(
+                imagePath
+            );
+
+        return (
+            publicData?.publicUrl ||
+            null
+        );
+
+    } catch (error) {
 
         console.error(
-            "Gagal membuat signed URL:",
+            "Gagal mengambil URL gambar:",
             error
         );
 
         return null;
     }
-
-
-    return data?.signedUrl || null;
-
 }
 
 
-// =========================
-// FORMAT DATE
-// =========================
+/* =========================================================
+   LOAD MEMORIES
+========================================================= */
 
-function formatDate(dateString) {
+async function loadMemories() {
 
-    if (!dateString) {
-        return "";
-    }
+    if (!memoryList) {
 
-
-    const date =
-        new Date(dateString);
-
-
-    if (Number.isNaN(
-        date.getTime()
-    )) {
-
-        return "";
-
-    }
-
-
-    return date.toLocaleDateString(
-        "id-ID",
-        {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
-
-}
-
-
-// =========================
-// OPEN ADD MODAL
-// =========================
-
-addMemoryBtn.addEventListener(
-    "click",
-    function () {
-
-        if (!currentUser) {
-
-            window.location.href =
-                "login.html";
-
-            return;
-        }
-
-
-        openAddModal();
-
-    }
-);
-
-
-function openAddModal() {
-
-    editingMemory = null;
-
-    memoryForm.reset();
-
-    memoryIdInput.value = "";
-
-    oldImagePathInput.value = "";
-
-    modalTitle.textContent =
-        "Add New Memory";
-
-    formMessage.textContent = "";
-
-    resetPreview();
-
-    memoryModal.style.display =
-        "flex";
-
-    document.body.classList.add(
-        "modal-open"
-    );
-
-
-    setTimeout(
-        function () {
-
-            titleInput.focus();
-
-        },
-        100
-    );
-
-}
-
-
-// =========================
-// OPEN EDIT MODAL
-// =========================
-
-async function editMemory(id) {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    const { data, error } =
-        await db
-            .from("memories")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-
-    if (error || !data) {
-
-        console.error(error);
+        console.error(
+            "Element #memory-list tidak ditemukan."
+        );
 
         return;
     }
 
-
-    // Pastikan memory milik user
-    if (
-        data.created_by !==
-        currentUser.id
-    ) {
-
-        return;
-    }
+    memoryList.innerHTML = `
+        <p class="memory-loading">
+            Memuat memories...
+        </p>
+    `;
 
 
-    editingMemory =
-        data;
+    try {
+
+        const { data, error } = await db
+    .from("memories")
+    .select("*")
+    .order("event_date", {
+        ascending: false,
+        nullsFirst: false
+    });
 
 
-    memoryIdInput.value =
-        data.id;
+        if (error) {
 
-    oldImagePathInput.value =
-        data.image_path || "";
-
-    titleInput.value =
-        data.title || "";
-
-    eventDateInput.value =
-        data.event_date || "";
-
-    storyInput.value =
-        data.story || "";
-
-
-    modalTitle.textContent =
-        "Edit Memory";
-
-    formMessage.textContent =
-        "";
-
-
-    // Preview foto lama
-
-    resetPreview();
-
-
-    if (data.image_path) {
-
-        const imageUrl =
-            await getMemoryImageUrl(
-                data.image_path
+            console.error(
+                "Gagal mengambil memories:",
+                error
             );
 
-
-        if (imageUrl) {
-
-            preview.src =
-                imageUrl;
-
-            photoPreviewContainer.style.display =
-                "block";
-
-        }
-
-    }
-
-
-    memoryModal.style.display =
-        "flex";
-
-    document.body.classList.add(
-        "modal-open"
-    );
-
-}
-
-
-// =========================
-// PHOTO PREVIEW
-// =========================
-
-photoInput.addEventListener(
-    "change",
-    function () {
-
-        const file =
-            photoInput.files[0];
-
-
-        if (!file) {
-
-            if (
-                editingMemory &&
-                editingMemory.image_path
-            ) {
-
-                return;
-
-            }
-
-            resetPreview();
-
-            return;
-        }
-
-
-        if (!file.type.startsWith(
-            "image/"
-        )) {
-
-            formMessage.textContent =
-                "File yang dipilih harus berupa gambar.";
-
-            photoInput.value = "";
+            memoryList.innerHTML = `
+                <p class="memory-loading">
+                    Gagal memuat memories.
+                </p>
+            `;
 
             return;
         }
 
 
         if (
-            file.size >
-            10 * 1024 * 1024
+            !data ||
+            data.length === 0
         ) {
 
-            formMessage.textContent =
-                "Ukuran foto maksimal 10 MB.";
-
-            photoInput.value = "";
+            memoryList.innerHTML = `
+                <p class="memory-loading">
+                    Belum ada memories.
+                </p>
+            `;
 
             return;
         }
 
 
-        formMessage.textContent =
-            "";
+        memoryList.innerHTML = "";
 
 
-        const reader =
-            new FileReader();
+        /*
+         * createMemoryCard() adalah async.
+         */
+
+        const cards =
+            await Promise.all(
+                data.map(
+                    function (memory) {
+
+                        return createMemoryCard(
+                            memory
+                        );
+                    }
+                )
+            );
 
 
-        reader.onload =
+        cards.forEach(
+            function (card) {
+
+                if (card) {
+
+                    memoryList.appendChild(
+                        card
+                    );
+                }
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error loadMemories:",
+            error
+        );
+
+        memoryList.innerHTML = `
+            <p class="memory-loading">
+                Gagal memuat memories.
+            </p>
+        `;
+    }
+}
+
+
+/* =========================================================
+   CREATE MEMORY CARD
+========================================================= */
+
+async function createMemoryCard(
+    memory
+) {
+
+    if (!memory) {
+        return null;
+    }
+
+
+    const card =
+        document.createElement("article");
+
+    card.className =
+        "memory-card";
+
+
+    /* =====================================================
+       COVER IMAGE
+    ===================================================== */
+
+    let imageUrl = null;
+
+
+    /*
+     * Prioritas pertama:
+     * image_path dari tabel memories.
+     */
+
+    if (memory.image_path) {
+
+        imageUrl =
+            await getMemoryImageUrl(
+                memory.image_path
+            );
+    }
+
+
+    /*
+     * Jika image_path tidak berhasil,
+     * ambil foto pertama dari memory_photos.
+     */
+
+    if (!imageUrl) {
+
+        const {
+            data: firstPhoto,
+            error
+        } = await db
+            .from("memory_photos")
+            .select(
+                "photo_url, photo_path"
+            )
+            .eq(
+                "memory_id",
+                memory.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            )
+            .limit(1)
+            .maybeSingle();
+
+
+        if (
+            !error &&
+            firstPhoto
+        ) {
+
+            /*
+             * Prioritaskan photo_path.
+             */
+
+            if (
+                firstPhoto.photo_path
+            ) {
+
+                imageUrl =
+                    await getMemoryImageUrl(
+                        firstPhoto.photo_path
+                    );
+            }
+
+
+            /*
+             * Fallback ke photo_url.
+             */
+
+            if (
+                !imageUrl &&
+                firstPhoto.photo_url
+            ) {
+
+                imageUrl =
+                    firstPhoto.photo_url;
+            }
+        }
+    }
+
+
+    /* =====================================================
+       FORMAT DATE
+    ===================================================== */
+
+    let formattedDate = "";
+
+
+    if (memory.event_date) {
+
+        const date =
+            new Date(
+                memory.event_date
+            );
+
+
+        if (
+            !isNaN(
+                date.getTime()
+            )
+        ) {
+
+            formattedDate =
+                date.toLocaleDateString(
+                    "id-ID",
+                    {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+        }
+    }
+
+
+    /* =====================================================
+       CARD CONTENT
+    ===================================================== */
+
+    card.innerHTML = `
+        ${
+            imageUrl
+                ? `
+                    <div class="memory-card-image">
+                        <img
+                            src="${escapeHtml(imageUrl)}"
+                            alt="${escapeHtml(
+                                memory.title ||
+                                "Memory"
+                            )}"
+                            loading="lazy"
+                        >
+                    </div>
+                `
+                : `
+                    <div class="memory-card-image memory-card-no-image">
+                        <span>No Photo</span>
+                    </div>
+                `
+        }
+
+        <div class="memory-card-content">
+
+            ${
+                formattedDate
+                    ? `
+                        <p class="memory-date">
+                            ${escapeHtml(
+                                formattedDate
+                            )}
+                        </p>
+                    `
+                    : ""
+            }
+
+            <h3>
+                ${escapeHtml(
+                    memory.title ||
+                    "Untitled Memory"
+                )}
+            </h3>
+
+            ${
+                memory.story
+                    ? `
+                        <p class="memory-story">
+                            ${escapeHtml(
+                                memory.story
+                            )}
+                        </p>
+                    `
+                    : ""
+            }
+
+            <p class="memory-view-hint">
+                Click to open memory
+            </p>
+
+            <div class="memory-card-actions">
+
+                ${
+                    currentUser &&
+                    memory.created_by ===
+                    currentUser.id
+                        ? `
+                            <button
+                                type="button"
+                                class="memory-edit-btn"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                type="button"
+                                class="memory-delete-btn"
+                            >
+                                Delete
+                            </button>
+                        `
+                        : ""
+                }
+
+            </div>
+
+        </div>
+    `;
+
+
+    /* =====================================================
+       EDIT BUTTON
+    ===================================================== */
+
+    const editBtn =
+        card.querySelector(
+            ".memory-edit-btn"
+        );
+
+
+    if (editBtn) {
+
+        editBtn.addEventListener(
+            "click",
             function (event) {
 
-                preview.src =
-                    event.target.result;
+                event.preventDefault();
+                event.stopPropagation();
 
-                photoPreviewContainer.style.display =
-                    "block";
+                openEditMemory(
+                    memory
+                );
+            }
+        );
+    }
 
-            };
+
+    /* =====================================================
+       DELETE BUTTON
+    ===================================================== */
+
+    const deleteBtn =
+        card.querySelector(
+            ".memory-delete-btn"
+        );
 
 
-        reader.readAsDataURL(file);
+    if (deleteBtn) {
 
+        deleteBtn.addEventListener(
+            "click",
+            async function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                await deleteMemory(
+                    memory
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       OPEN MEMORY DETAIL
+    ===================================================== */
+
+    card.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target.closest(
+                    ".memory-card-actions"
+                ) ||
+                event.target.closest(
+                    "button"
+                )
+            ) {
+                return;
+            }
+
+            openMemoryDetail(
+                memory
+            );
+        }
+    );
+
+
+    return card;
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+
+/* =========================================================
+   MEMORY DETAIL
+========================================================= */
+
+async function openMemoryDetail(
+    memory
+) {
+
+    if (!memory) {
+        return;
+    }
+
+
+    selectedDetailMemory =
+        memory;
+
+
+    const modal =
+        document.getElementById(
+            "memory-detail-modal"
+        );
+
+    const title =
+        document.getElementById(
+            "detail-memory-title"
+        );
+
+    const date =
+        document.getElementById(
+            "detail-memory-date"
+        );
+
+    const story =
+        document.getElementById(
+            "detail-memory-story"
+        );
+
+    const gallery =
+        document.getElementById(
+            "memory-detail-gallery"
+        );
+
+    const actions =
+        document.getElementById(
+            "memory-detail-actions"
+        );
+
+
+    if (!modal) {
+
+        console.error(
+            "Element #memory-detail-modal tidak ditemukan di index.html."
+        );
+
+        return;
+    }
+
+
+    /* =====================================================
+       TITLE
+    ===================================================== */
+
+    if (title) {
+
+        title.textContent =
+            memory.title || "";
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    if (date) {
+
+        if (memory.event_date) {
+
+            const eventDate =
+                new Date(
+                    memory.event_date
+                );
+
+
+            if (
+                !isNaN(
+                    eventDate.getTime()
+                )
+            ) {
+
+                date.textContent =
+                    eventDate.toLocaleDateString(
+                        "id-ID",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    );
+
+            } else {
+
+                date.textContent =
+                    "";
+            }
+
+        } else {
+
+            date.textContent =
+                "";
+        }
+    }
+
+
+    /* =====================================================
+       STORY
+    ===================================================== */
+
+    if (story) {
+
+        story.textContent =
+            memory.story || "";
+    }
+
+
+    /* =====================================================
+       OWNER ACTION
+    ===================================================== */
+
+    if (actions) {
+
+        if (
+            currentUser &&
+            memory.created_by ===
+            currentUser.id
+        ) {
+
+            actions.style.display =
+                "flex";
+
+        } else {
+
+            actions.style.display =
+                "none";
+        }
+    }
+
+
+    /* =====================================================
+       OPEN MODAL
+    ===================================================== */
+
+    modal.style.display =
+        "flex";
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    /* =====================================================
+       LOADING GALLERY
+    ===================================================== */
+
+    if (gallery) {
+
+        gallery.innerHTML = `
+            <p class="memory-loading">
+                Memuat foto...
+            </p>
+        `;
+    }
+
+
+    try {
+
+        /* =================================================
+           GET ALL PHOTOS
+        ================================================= */
+
+        const {
+            data: photos,
+            error
+        } = await db
+            .from("memory_photos")
+            .select(
+                "id, memory_id, photo_url, photo_path, created_at"
+            )
+            .eq(
+                "memory_id",
+                memory.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Gagal mengambil foto:",
+                error
+            );
+
+            if (gallery) {
+
+                gallery.innerHTML = `
+                    <p class="memory-loading">
+                        Gagal memuat foto.
+                    </p>
+                `;
+            }
+
+            return;
+        }
+
+
+        let memoryPhotos =
+            photos || [];
+
+
+        /* =================================================
+           FALLBACK MEMORY LAMA
+        ================================================= */
+
+        if (
+            memoryPhotos.length === 0 &&
+            memory.image_path
+        ) {
+
+            const imageUrl =
+                await getMemoryImageUrl(
+                    memory.image_path
+                );
+
+
+            if (imageUrl) {
+
+                memoryPhotos = [
+                    {
+                        id:
+                            "legacy-" +
+                            memory.id,
+
+                        memory_id:
+                            memory.id,
+
+                        photo_url:
+                            null,
+
+                        photo_path:
+                            memory.image_path
+                    }
+                ];
+            }
+        }
+
+
+        /* =================================================
+           GALLERY ELEMENT CHECK
+        ================================================= */
+
+        if (!gallery) {
+            return;
+        }
+
+
+        gallery.innerHTML = "";
+
+
+        /* =================================================
+           NO PHOTO
+        ================================================= */
+
+        if (
+            memoryPhotos.length === 0
+        ) {
+
+            gallery.innerHTML = `
+                <p class="memory-loading">
+                    Belum ada foto pada memory ini.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        /* =================================================
+           RENDER ALL PHOTOS
+        ================================================= */
+
+        for (
+            const photo of memoryPhotos
+        ) {
+
+            let imageUrl =
+                null;
+
+
+            /*
+             * Gunakan photo_path sebagai sumber utama.
+             * Signed URL digunakan agar foto tetap bisa
+             * dimuat dari bucket private.
+             */
+
+            if (
+                photo.photo_path
+            ) {
+
+                imageUrl =
+                    await getMemoryImageUrl(
+                        photo.photo_path
+                    );
+            }
+
+
+            /*
+             * Fallback ke photo_url.
+             */
+
+            if (
+                !imageUrl &&
+                photo.photo_url
+            ) {
+
+                imageUrl =
+                    photo.photo_url;
+            }
+
+
+            /*
+             * Jika URL tidak ditemukan.
+             */
+
+            if (!imageUrl) {
+
+                console.error(
+                    "URL foto tidak ditemukan:",
+                    photo
+                );
+
+                continue;
+            }
+
+
+            /*
+             * Buat elemen gambar.
+             */
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+
+            img.src =
+                imageUrl;
+
+
+            img.alt =
+                memory.title ||
+                "Memory";
+
+
+            img.loading =
+                "lazy";
+
+
+            img.onerror =
+                function () {
+
+                    console.error(
+                        "Foto gagal dimuat:",
+                        imageUrl
+                    );
+                };
+
+
+            gallery.appendChild(
+                img
+            );
+        }
+
+
+        /*
+         * Jika seluruh foto gagal dimuat.
+         */
+
+        if (
+            gallery.children.length === 0
+        ) {
+
+            gallery.innerHTML = `
+                <p class="memory-loading">
+                    Foto tidak dapat dimuat.
+                </p>
+            `;
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Error openMemoryDetail:",
+            error
+        );
+
+        if (gallery) {
+
+            gallery.innerHTML = `
+                <p class="memory-loading">
+                    Gagal memuat foto.
+                </p>
+            `;
+        }
+    }
+}
+
+
+/* =========================================================
+   CLOSE MEMORY DETAIL
+========================================================= */
+
+function closeMemoryDetail() {
+
+    const modal =
+        document.getElementById(
+            "memory-detail-modal"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "none";
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+
+    selectedDetailMemory =
+        null;
+}
+
+
+/* =========================================================
+   DETAIL CLOSE BUTTON
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const closeButton =
+            event.target.closest(
+                "#memory-detail-close"
+            );
+
+
+        if (!closeButton) {
+            return;
+        }
+
+
+        event.preventDefault();
+
+        closeMemoryDetail();
     }
 );
 
 
-// =========================
-// UPLOAD PHOTO
-// =========================
+/* =========================================================
+   DETAIL CLICK OUTSIDE
+========================================================= */
 
-async function uploadPhoto(file) {
+document.addEventListener(
+    "click",
+    function (event) {
 
-    if (!file) {
-        return null;
+        const modal =
+            document.getElementById(
+                "memory-detail-modal"
+            );
+
+
+        if (!modal) {
+            return;
+        }
+
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            closeMemoryDetail();
+        }
+    }
+);
+
+
+/* =========================================================
+   ADD PHOTO TO EXISTING MEMORY
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const addPhotoButton =
+            event.target.closest(
+                "#detail-add-photo-btn"
+            );
+
+
+        if (!addPhotoButton) {
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        if (!selectedDetailMemory) {
+            return;
+        }
+
+
+        if (!currentUser) {
+
+            alert(
+                "Silakan login terlebih dahulu."
+            );
+
+            return;
+        }
+
+
+        if (
+            selectedDetailMemory.created_by !==
+            currentUser.id
+        ) {
+
+            alert(
+                "Kamu tidak memiliki izin untuk menambahkan foto."
+            );
+
+            return;
+        }
+
+
+        const detailPhotoInput =
+            document.getElementById(
+                "detail-photo-input"
+            );
+
+
+        if (detailPhotoInput) {
+
+            detailPhotoInput.value =
+                "";
+
+            detailPhotoInput.click();
+        }
+    }
+);
+
+
+/* =========================================================
+   UPLOAD ADDITIONAL PHOTOS
+========================================================= */
+
+document.addEventListener(
+    "change",
+    async function (event) {
+
+        if (
+            event.target.id !==
+            "detail-photo-input"
+        ) {
+            return;
+        }
+
+
+        if (!selectedDetailMemory) {
+            return;
+        }
+
+
+        const files =
+            Array.from(
+                event.target.files || []
+            );
+
+
+        if (
+            files.length === 0
+        ) {
+            return;
+        }
+
+
+        if (!currentUser) {
+
+            alert(
+                "Silakan login terlebih dahulu."
+            );
+
+            event.target.value =
+                "";
+
+            return;
+        }
+
+
+        if (
+            selectedDetailMemory.created_by !==
+            currentUser.id
+        ) {
+
+            alert(
+                "Kamu tidak memiliki izin untuk menambahkan foto."
+            );
+
+            event.target.value =
+                "";
+
+            return;
+        }
+
+
+        try {
+
+            const uploadedPhotos =
+                [];
+
+
+            for (
+                const file of files
+            ) {
+
+                if (
+                    !file.type.startsWith(
+                        "image/"
+                    )
+                ) {
+
+                    continue;
+                }
+
+
+                const extension =
+                    file.name
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
+
+
+                const fileName =
+                    `${crypto.randomUUID()}.${extension}`;
+
+
+                const filePath =
+                    `${currentUser.id}/${selectedDetailMemory.id}/${fileName}`;
+
+
+                const {
+                    error: uploadError
+                } = await db.storage
+                    .from("memory-photos")
+                    .upload(
+                        filePath,
+                        file,
+                        {
+                            upsert: false
+                        }
+                    );
+
+
+                if (uploadError) {
+                    throw uploadError;
+                }
+
+
+                /*
+                 * Simpan path.
+                 * URL akan dibuat kembali saat foto ditampilkan.
+                 */
+
+                const {
+                    data: publicData
+                } = db.storage
+                    .from("memory-photos")
+                    .getPublicUrl(
+                        filePath
+                    );
+
+
+                const photoUrl =
+                    publicData?.publicUrl ||
+                    "";
+
+
+                uploadedPhotos.push({
+                    memory_id:
+                        selectedDetailMemory.id,
+
+                    photo_url:
+                        photoUrl,
+
+                    photo_path:
+                        filePath,
+
+                    created_by:
+                        currentUser.id
+                });
+            }
+
+
+            if (
+                uploadedPhotos.length === 0
+            ) {
+
+                alert(
+                    "Tidak ada foto yang valid."
+                );
+
+                return;
+            }
+
+
+            /* =============================================
+               INSERT KE memory_photos
+            ============================================= */
+
+            const {
+                error: insertError
+            } = await db
+                .from("memory_photos")
+                .insert(
+                    uploadedPhotos
+                );
+
+
+            if (insertError) {
+                throw insertError;
+            }
+
+
+            /*
+             * Jika memory belum memiliki cover,
+             * gunakan foto pertama sebagai cover.
+             */
+
+            if (
+                !selectedDetailMemory.image_path
+            ) {
+
+                const firstPhoto =
+                    uploadedPhotos[0];
+
+
+                await db
+                    .from("memories")
+                    .update({
+                        image_path:
+                            firstPhoto.photo_path,
+
+                        image_url:
+                            firstPhoto.photo_url
+                    })
+                    .eq(
+                        "id",
+                        selectedDetailMemory.id
+                    );
+
+
+                selectedDetailMemory.image_path =
+                    firstPhoto.photo_path;
+
+                selectedDetailMemory.image_url =
+                    firstPhoto.photo_url;
+            }
+
+
+            alert(
+                `${uploadedPhotos.length} foto berhasil ditambahkan.`
+            );
+
+
+            /*
+             * Refresh detail.
+             */
+
+            await openMemoryDetail(
+                selectedDetailMemory
+            );
+
+
+            /*
+             * Refresh card.
+             */
+
+            await loadMemories();
+
+
+        } catch (error) {
+
+            console.error(
+                "Gagal menambahkan foto:",
+                error
+            );
+
+            alert(
+                "Foto gagal ditambahkan."
+            );
+
+        } finally {
+
+            event.target.value =
+                "";
+        }
+    }
+);
+
+
+/* =========================================================
+   OPEN MEMORY MODAL
+========================================================= */
+
+function openMemoryModal() {
+
+    if (!memoryModal) {
+
+        console.error(
+            "Element #memory-modal tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    memoryModal.style.display =
+        "flex";
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+/* =========================================================
+   CLOSE MEMORY MODAL
+========================================================= */
+
+function closeMemoryModal() {
+
+    if (!memoryModal) {
+        return;
+    }
+
+
+    memoryModal.style.display =
+        "none";
+
+
+    document.body.style.overflow =
+        "";
+
+
+    editingMemory =
+        null;
+
+
+    selectedFiles =
+        [];
+
+
+    if (memoryForm) {
+
+        memoryForm.reset();
+    }
+
+
+    if (imagePreview) {
+
+        imagePreview.innerHTML =
+            "";
+    }
+}
+
+
+/* =========================================================
+   ADD MEMORY BUTTON
+========================================================= */
+
+if (addMemoryBtn) {
+
+    addMemoryBtn.addEventListener(
+        "click",
+        function () {
+
+            editingMemory =
+                null;
+
+
+            if (memoryForm) {
+
+                memoryForm.reset();
+            }
+
+
+            selectedFiles =
+                [];
+
+
+            if (imagePreview) {
+
+                imagePreview.innerHTML =
+                    "";
+            }
+
+
+            openMemoryModal();
+        }
+    );
+}
+
+
+/* =========================================================
+   CLOSE MEMORY FORM MODAL
+========================================================= */
+
+if (modalClose) {
+    modalClose.addEventListener("click", function () {
+        closeMemoryModal();
+    });
+}
+
+if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+        closeMemoryModal();
+    });
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE MEMORY FORM MODAL
+========================================================= */
+
+if (memoryModal) {
+
+    memoryModal.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                memoryModal
+            ) {
+
+                closeMemoryModal();
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   IMAGE INPUT
+========================================================= */
+
+if (memoryImage) {
+
+    memoryImage.addEventListener(
+        "change",
+        function (event) {
+
+            selectedFiles =
+                Array.from(
+                    event.target.files ||
+                    []
+                );
+
+
+            previewSelectedImages();
+        }
+    );
+}
+
+
+/* =========================================================
+   PREVIEW SELECTED IMAGES
+========================================================= */
+
+function previewSelectedImages() {
+
+    if (!imagePreview) {
+        return;
+    }
+
+
+    imagePreview.innerHTML =
+        "";
+
+
+    if (
+        !selectedFiles ||
+        selectedFiles.length === 0
+    ) {
+
+        return;
+    }
+
+
+    selectedFiles.forEach(
+        function (file) {
+
+            if (
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (event) {
+
+                    const img =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    img.src =
+                        event.target.result;
+
+
+                    img.className =
+                        "image-preview-item";
+
+
+                    imagePreview.appendChild(
+                        img
+                    );
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   UPLOAD MEMORY PHOTOS
+========================================================= */
+
+async function uploadMemoryPhotos(
+    memoryId,
+    files
+) {
+
+    const uploadedPhotos =
+        [];
+
+
+    if (
+        !files ||
+        files.length === 0
+    ) {
+
+        return uploadedPhotos;
     }
 
 
@@ -841,368 +1855,613 @@ async function uploadPhoto(file) {
         throw new Error(
             "User belum login."
         );
-
     }
 
 
-    if (!file.type.startsWith(
-        "image/"
-    )) {
-
-        throw new Error(
-            "File harus berupa gambar."
-        );
-
-    }
-
-
-    if (
-        file.size >
-        10 * 1024 * 1024
+    for (
+        const file of files
     ) {
 
-        throw new Error(
-            "Ukuran foto maksimal 10 MB."
-        );
+        if (
+            !file.type.startsWith(
+                "image/"
+            )
+        ) {
 
-    }
-
-
-    const extension =
-        file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
+            continue;
+        }
 
 
-    const fileName =
-        `${crypto.randomUUID()}.${extension}`;
+        const extension =
+            file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
 
 
-    const filePath =
-        `${currentUser.id}/${fileName}`;
+        const fileName =
+            `${crypto.randomUUID()}.${extension}`;
 
 
-    const { error } =
-        await db.storage
+        const filePath =
+            `${currentUser.id}/${memoryId}/${fileName}`;
+
+
+        const {
+            error: uploadError
+        } = await db.storage
             .from("memory-photos")
             .upload(
                 filePath,
                 file,
                 {
-                    cacheControl: "3600",
                     upsert: false
                 }
             );
 
 
-    if (error) {
+        if (uploadError) {
 
-        throw error;
+            console.error(
+                "Gagal upload foto:",
+                uploadError
+            );
 
+            throw uploadError;
+        }
+
+
+        const {
+            data: publicData
+        } = db.storage
+            .from("memory-photos")
+            .getPublicUrl(
+                filePath
+            );
+
+
+        const photoUrl =
+            publicData?.publicUrl ||
+            "";
+
+
+        uploadedPhotos.push({
+            memory_id:
+                memoryId,
+
+            photo_path:
+                filePath,
+
+            photo_url:
+                photoUrl,
+
+            created_by:
+                currentUser.id
+        });
     }
 
 
-    return {
-        path: filePath
-    };
-
+    return uploadedPhotos;
 }
 
 
-// =========================
-// SAVE MEMORY
-// =========================
+/* =========================================================
+   ADD / EDIT MEMORY FORM
+========================================================= */
 
-memoryForm.addEventListener(
-    "submit",
-    async function (event) {
+if (memoryForm) {
 
-        event.preventDefault();
+    memoryForm.addEventListener(
+        "submit",
+        async function (event) {
 
-
-        if (!currentUser) {
-
-            formMessage.textContent =
-                "Silakan login terlebih dahulu.";
-
-            return;
-        }
+            event.preventDefault();
 
 
-        const title =
-            titleInput.value.trim();
+            if (!currentUser) {
 
-        const story =
-            storyInput.value.trim();
+                alert(
+                    "Silakan login terlebih dahulu."
+                );
 
-        const eventDate =
-            eventDateInput.value || null;
-
-        const file =
-            photoInput.files[0];
-
-
-        if (!title) {
-
-            formMessage.textContent =
-                "Judul kenangan wajib diisi.";
-
-            titleInput.focus();
-
-            return;
-        }
-
-
-        if (!story) {
-
-            formMessage.textContent =
-                "Cerita wajib diisi.";
-
-            storyInput.focus();
-
-            return;
-        }
-
-
-        formMessage.textContent =
-            "Menyimpan kenangan...";
-
-
-        const saveButton =
-            document.getElementById(
-                "save-memory-btn"
-            );
-
-        saveButton.disabled =
-            true;
-
-
-        let uploadedPhoto =
-            null;
-
-
-        try {
-
-            // =========================
-            // UPLOAD FOTO BARU
-            // =========================
-
-            if (file) {
-
-                uploadedPhoto =
-                    await uploadPhoto(file);
-
+                return;
             }
 
 
-            // =========================
-            // EDIT
-            // =========================
-
-            if (editingMemory) {
-
-                const oldPath =
-                    editingMemory.image_path ||
-                    null;
+            const title =
+                memoryTitle?.value.trim() ||
+                "";
 
 
-                const newImagePath =
-                    uploadedPhoto
-                        ? uploadedPhoto.path
-                        : oldPath;
+            const story =
+                memoryStory?.value.trim() ||
+                "";
 
 
-                const { error } =
-                    await db
+            const eventDate =
+                memoryDate?.value ||
+                "";
+
+
+            if (!title) {
+
+                alert(
+                    "Judul memory wajib diisi."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                /* =========================================
+                   EDIT MEMORY
+                ========================================= */
+
+                if (editingMemory) {
+
+                    if (
+                        editingMemory.created_by !==
+                        currentUser.id
+                    ) {
+
+                        alert(
+                            "Kamu tidak memiliki izin untuk mengedit memory ini."
+                        );
+
+                        return;
+                    }
+
+
+                    const {
+                        error
+                    } = await db
                         .from("memories")
                         .update({
+                            title:
+                                title,
 
-                            title: title,
-
-                            story: story,
+                            story:
+                                story,
 
                             event_date:
-                                eventDate,
-
-                            image_url: null,
-
-                            image_path:
-                                newImagePath,
-
-                            updated_at:
-                                new Date().toISOString()
-
+                                eventDate
                         })
                         .eq(
                             "id",
                             editingMemory.id
-                        )
-                        .eq(
-                            "created_by",
-                            currentUser.id
                         );
 
 
-                if (error) {
+                    if (error) {
 
-                    // Hapus foto baru jika
-                    // update database gagal
+                        console.error(
+                            "Gagal update memory:",
+                            error
+                        );
 
-                    if (uploadedPhoto) {
+                        alert(
+                            "Gagal mengubah memory."
+                        );
 
-                        await db.storage
-                            .from("memory-photos")
-                            .remove([
-                                uploadedPhoto.path
-                            ]);
-
+                        return;
                     }
 
-                    throw error;
+
+                    /*
+                     * Jika ada foto baru,
+                     * tambahkan ke album.
+                     * Foto lama tetap ada.
+                     */
+
+                    if (
+                        selectedFiles.length >
+                        0
+                    ) {
+
+                        const uploadedPhotos =
+                            await uploadMemoryPhotos(
+                                editingMemory.id,
+                                selectedFiles
+                            );
+
+
+                        if (
+                            uploadedPhotos.length >
+                            0
+                        ) {
+
+                            const {
+                                error:
+                                photoError
+                            } = await db
+                                .from(
+                                    "memory_photos"
+                                )
+                                .insert(
+                                    uploadedPhotos
+                                );
+
+
+                            if (photoError) {
+
+                                console.error(
+                                    "Gagal menyimpan foto tambahan:",
+                                    photoError
+                                );
+
+                                alert(
+                                    "Memory berhasil diubah, tetapi foto tambahan gagal disimpan."
+                                );
+
+                            } else {
+
+                                /*
+                                 * Jika belum punya cover,
+                                 * gunakan foto pertama.
+                                 */
+
+                                if (
+                                    !editingMemory.image_path
+                                ) {
+
+                                    const firstPhoto =
+                                        uploadedPhotos[0];
+
+
+                                    await db
+                                        .from(
+                                            "memories"
+                                        )
+                                        .update({
+                                            image_path:
+                                                firstPhoto.photo_path,
+
+                                            image_url:
+                                                firstPhoto.photo_url
+                                        })
+                                        .eq(
+                                            "id",
+                                            editingMemory.id
+                                        );
+                                }
+                            }
+                        }
+                    }
+
+
+                    alert(
+                        "Memory berhasil diubah."
+                    );
+
 
                 }
 
+                /* =========================================
+                   ADD MEMORY
+                ========================================= */
 
-                // Hapus foto lama jika
-                // user menggantinya
+                else {
 
-                if (
-                    uploadedPhoto &&
-                    oldPath &&
-                    oldPath !==
-                    uploadedPhoto.path
-                ) {
-
-                    await db.storage
-                        .from("memory-photos")
-                        .remove([
-                            oldPath
-                        ]);
-
-                }
-
-
-                formMessage.textContent =
-                    "Kenangan berhasil diperbarui.";
-
-            }
-
-
-            // =========================
-            // INSERT
-            // =========================
-
-            else {
-
-                const { error } =
-                    await db
+                    const {
+                        data: newMemory,
+                        error
+                    } = await db
                         .from("memories")
                         .insert({
+                            title:
+                                title,
 
-                            title: title,
-
-                            story: story,
+                            story:
+                                story,
 
                             event_date:
                                 eventDate,
 
-                            image_url: null,
-
-                            image_path:
-                                uploadedPhoto
-                                    ? uploadedPhoto.path
-                                    : null,
-
                             created_by:
                                 currentUser.id
+                        })
+                        .select()
+                        .single();
 
-                        });
 
+                    if (error) {
 
-                if (error) {
+                        console.error(
+                            "Gagal membuat memory:",
+                            error
+                        );
 
-                    // Jika insert gagal,
-                    // hapus foto yang baru diupload
+                        alert(
+                            "Gagal menambahkan memory."
+                        );
 
-                    if (uploadedPhoto) {
-
-                        await db.storage
-                            .from("memory-photos")
-                            .remove([
-                                uploadedPhoto.path
-                            ]);
-
+                        return;
                     }
 
-                    throw error;
 
+                    /*
+                     * Upload foto.
+                     */
+
+                    if (
+                        selectedFiles.length >
+                        0
+                    ) {
+
+                        const uploadedPhotos =
+                            await uploadMemoryPhotos(
+                                newMemory.id,
+                                selectedFiles
+                            );
+
+
+                        if (
+                            uploadedPhotos.length >
+                            0
+                        ) {
+
+                            const {
+                                error:
+                                photoError
+                            } = await db
+                                .from(
+                                    "memory_photos"
+                                )
+                                .insert(
+                                    uploadedPhotos
+                                );
+
+
+                            if (photoError) {
+
+                                console.error(
+                                    "Gagal menyimpan data foto:",
+                                    photoError
+                                );
+
+
+                                /*
+                                 * Hapus file yang
+                                 * sudah ter-upload.
+                                 */
+
+                                const paths =
+                                    uploadedPhotos
+                                        .map(
+                                            function (
+                                                photo
+                                            ) {
+                                                return photo.photo_path;
+                                            }
+                                        )
+                                        .filter(
+                                            Boolean
+                                        );
+
+
+                                if (
+                                    paths.length >
+                                    0
+                                ) {
+
+                                    await db.storage
+                                        .from(
+                                            "memory-photos"
+                                        )
+                                        .remove(
+                                            paths
+                                        );
+                                }
+
+
+                                /*
+                                 * Hapus memory.
+                                 */
+
+                                await db
+                                    .from(
+                                        "memories"
+                                    )
+                                    .delete()
+                                    .eq(
+                                        "id",
+                                        newMemory.id
+                                    );
+
+
+                                alert(
+                                    "Foto gagal disimpan. Memory dibatalkan."
+                                );
+
+                                return;
+                            }
+
+
+                            /*
+                             * Foto pertama menjadi
+                             * cover memory.
+                             */
+
+                            const firstPhoto =
+                                uploadedPhotos[0];
+
+
+                            const {
+                                error:
+                                coverError
+                            } = await db
+                                .from(
+                                    "memories"
+                                )
+                                .update({
+                                    image_path:
+                                        firstPhoto.photo_path,
+
+                                    image_url:
+                                        firstPhoto.photo_url
+                                })
+                                .eq(
+                                    "id",
+                                    newMemory.id
+                                );
+
+
+                            if (coverError) {
+
+                                console.error(
+                                    "Gagal menyimpan cover memory:",
+                                    coverError
+                                );
+                            }
+                        }
+                    }
+
+
+                    alert(
+                        "Memory berhasil ditambahkan."
+                    );
                 }
 
 
-                formMessage.textContent =
-                    "Kenangan berhasil ditambahkan.";
+                closeMemoryModal();
 
+                await loadMemories();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error submit memory:",
+                    error
+                );
+
+                alert(
+                    "Terjadi kesalahan. Silakan periksa Console."
+                );
             }
-
-
-            // Tunggu sebentar agar
-            // pesan sukses terlihat
-
-            await new Promise(
-                resolve =>
-                    setTimeout(
-                        resolve,
-                        500
-                    )
-            );
-
-
-            closeMemoryModal();
-
-            await loadMemories();
-
-
-        } catch (error) {
-
-            console.error(
-                "Gagal menyimpan memory:",
-                error
-            );
-
-
-            formMessage.textContent =
-                error.message ||
-                "Gagal menyimpan kenangan.";
-
-        } finally {
-
-            saveButton.disabled =
-                false;
-
         }
+    );
+}
 
-    }
-);
 
+/* =========================================================
+   OPEN EDIT MEMORY
+========================================================= */
 
-// =========================
-// DELETE MEMORY
-// =========================
-
-async function deleteMemory(
-    id,
-    imagePath
+function openEditMemory(
+    memory
 ) {
 
     if (!currentUser) {
+
+        alert(
+            "Silakan login terlebih dahulu."
+        );
+
+        return;
+    }
+
+
+    if (
+        memory.created_by !==
+        currentUser.id
+    ) {
+
+        alert(
+            "Kamu tidak memiliki izin untuk mengedit memory ini."
+        );
+
+        return;
+    }
+
+
+    editingMemory =
+        memory;
+
+
+    if (memoryTitle) {
+
+        memoryTitle.value =
+            memory.title || "";
+    }
+
+
+    if (memoryStory) {
+
+        memoryStory.value =
+            memory.story || "";
+    }
+
+
+    if (memoryDate) {
+
+        memoryDate.value =
+            memory.event_date || "";
+    }
+
+
+    if (memoryImage) {
+
+        memoryImage.value =
+            "";
+    }
+
+
+    selectedFiles =
+        [];
+
+
+    if (imagePreview) {
+
+        imagePreview.innerHTML = `
+            <p>
+                Foto baru akan ditambahkan
+                ke album memory ini.
+            </p>
+        `;
+    }
+
+
+    openMemoryModal();
+}
+
+
+/* =========================================================
+   DELETE MEMORY
+========================================================= */
+
+async function deleteMemory(
+    memory
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Silakan login terlebih dahulu."
+        );
+
+        return;
+    }
+
+
+    if (
+        memory.created_by !==
+        currentUser.id
+    ) {
+
+        alert(
+            "Kamu tidak memiliki izin untuk menghapus memory ini."
+        );
+
         return;
     }
 
 
     const confirmed =
         confirm(
-            "Apakah kamu yakin ingin menghapus kenangan ini?"
+            `Hapus memory "${memory.title}"?`
         );
 
 
@@ -1213,54 +2472,131 @@ async function deleteMemory(
 
     try {
 
-        // Hapus database terlebih dahulu
+        /* ================================================
+           GET ALL PHOTOS
+        ================================================ */
 
-        const { error } =
-            await db
-                .from("memories")
-                .delete()
-                .eq(
-                    "id",
-                    id
-                )
-                .eq(
-                    "created_by",
-                    currentUser.id
-                );
+        const {
+            data: photos,
+            error: photoFetchError
+        } = await db
+            .from("memory_photos")
+            .select(
+                "id, photo_path"
+            )
+            .eq(
+                "memory_id",
+                memory.id
+            );
+
+
+        if (photoFetchError) {
+
+            console.error(
+                "Gagal mengambil foto memory:",
+                photoFetchError
+            );
+        }
+
+
+        /* ================================================
+           DELETE STORAGE FILES
+        ================================================ */
+
+        if (
+            photos &&
+            photos.length > 0
+        ) {
+
+            const paths =
+                photos
+                    .map(
+                        function (photo) {
+
+                            return photo.photo_path;
+                        }
+                    )
+                    .filter(
+                        Boolean
+                    );
+
+
+            if (
+                paths.length > 0
+            ) {
+
+                const {
+                    error:
+                    storageError
+                } = await db.storage
+                    .from(
+                        "memory-photos"
+                    )
+                    .remove(
+                        paths
+                    );
+
+
+                if (storageError) {
+
+                    console.error(
+                        "Gagal menghapus foto dari Storage:",
+                        storageError
+                    );
+                }
+            }
+        }
+
+
+        /* ================================================
+           DELETE MEMORY
+        ================================================ */
+
+        const {
+            error
+        } = await db
+            .from("memories")
+            .delete()
+            .eq(
+                "id",
+                memory.id
+            );
 
 
         if (error) {
 
-            throw error;
+            console.error(
+                "Gagal menghapus memory:",
+                error
+            );
 
+            alert(
+                "Gagal menghapus memory."
+            );
+
+            return;
         }
 
 
-        // Jika database berhasil dihapus,
-        // hapus foto dari Storage
-
-        if (imagePath) {
-
-            const { error:
-                storageError
-            } =
-                await db.storage
-                    .from("memory-photos")
-                    .remove([
-                        imagePath
-                    ]);
+        /*
+         * memory_photos otomatis ikut terhapus
+         * karena ON DELETE CASCADE.
+         */
 
 
-            if (storageError) {
+        if (
+            selectedDetailMemory &&
+            selectedDetailMemory.id ===
+            memory.id
+        ) {
 
-                console.error(
-                    "Memory terhapus, tetapi foto gagal dihapus:",
-                    storageError
-                );
-
-            }
-
+            closeMemoryDetail();
         }
+
+
+        alert(
+            "Memory berhasil dihapus."
+        );
 
 
         await loadMemories();
@@ -1269,140 +2605,20 @@ async function deleteMemory(
     } catch (error) {
 
         console.error(
-            "Gagal menghapus memory:",
+            "Error deleteMemory:",
             error
         );
 
         alert(
-            error.message ||
-            "Gagal menghapus kenangan."
+            "Terjadi kesalahan saat menghapus memory."
         );
-
     }
-
 }
 
 
-// =========================
-// CLOSE MODAL
-// =========================
-
-modalClose.addEventListener(
-    "click",
-    closeMemoryModal
-);
-
-
-cancelBtn.addEventListener(
-    "click",
-    closeMemoryModal
-);
-
-
-document.querySelector(
-    ".memory-modal-overlay"
-).addEventListener(
-    "click",
-    closeMemoryModal
-);
-
-
-function closeMemoryModal() {
-
-    memoryModal.style.display =
-        "none";
-
-    document.body.classList.remove(
-        "modal-open"
-    );
-
-    memoryForm.reset();
-
-    editingMemory = null;
-
-    memoryIdInput.value = "";
-
-    oldImagePathInput.value = "";
-
-    formMessage.textContent = "";
-
-    resetPreview();
-
-}
-
-
-// =========================
-// ESCAPE MODAL
-// =========================
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "Escape" &&
-            memoryModal.style.display !==
-            "none"
-        ) {
-
-            closeMemoryModal();
-
-        }
-
-    }
-);
-
-
-// =========================
-// RESET PREVIEW
-// =========================
-
-function resetPreview() {
-
-    preview.removeAttribute(
-        "src"
-    );
-
-    photoPreviewContainer.style.display =
-        "none";
-
-}
-
-
-// =========================
-// ESCAPE HTML
-// =========================
-
-function escapeHtml(value) {
-
-    return String(value)
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
-
-}
-
-
-// =========================
-// AUTH STATE CHANGE
-// =========================
+/* =========================================================
+   SUPABASE AUTH STATE
+========================================================= */
 
 db.auth.onAuthStateChange(
     function (
@@ -1413,14 +2629,133 @@ db.auth.onAuthStateChange(
         currentUser =
             session?.user || null;
 
+
         updateNavbar();
 
+
+        /*
+         * Jangan loadMemories() di sini.
+         *
+         * checkUser() sudah melakukan
+         * loadMemories() saat halaman pertama
+         * kali dibuka.
+         */
     }
 );
 
 
-// =========================
-// INITIAL LOAD
-// =========================
+/* =========================================================
+   KEYBOARD
+========================================================= */
 
-checkUser();
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        /*
+         * Escape untuk menutup Memory Detail.
+         */
+
+        const detailModal =
+            document.getElementById(
+                "memory-detail-modal"
+            );
+
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            if (
+                detailModal &&
+                detailModal.style.display !==
+                "none"
+            ) {
+
+                closeMemoryDetail();
+
+                return;
+            }
+
+
+            if (
+                memoryModal &&
+                memoryModal.style.display !==
+                "none"
+            ) {
+
+                closeMemoryModal();
+
+                return;
+            }
+        }
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        console.log(
+            "MOCANO FILES - index.js aktif"
+        );
+
+
+        await checkUser();
+    }
+);
+
+/* =====================================================
+   PROFILE DROPDOWN
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const profileButton =
+        document.getElementById("profile-button");
+
+    const profileDropdown =
+        document.getElementById("profile-dropdown");
+
+    const profileMenu =
+        document.getElementById("profile-menu");
+
+
+    if (!profileButton || !profileDropdown || !profileMenu) {
+        return;
+    }
+
+
+    /* =========================
+       TOGGLE DROPDOWN
+    ========================= */
+
+    profileButton.addEventListener("click", (event) => {
+
+        event.stopPropagation();
+
+        profileDropdown.classList.toggle("show");
+
+    });
+
+
+    /* =========================
+       CLOSE WHEN CLICK OUTSIDE
+    ========================= */
+
+    document.addEventListener("click", (event) => {
+
+        if (!profileMenu.contains(event.target)) {
+
+            profileDropdown.classList.remove("show");
+
+        }
+
+    });
+
+});
