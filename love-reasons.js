@@ -1,136 +1,798 @@
-<!DOCTYPE html>
-<html lang="id">
+/* =========================
+   REASONS I LOVE YOU
+========================= */
 
-<head>
+let loveReasonsData = [];
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Login | Our Little Album</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-</head>
-
-<body class="auth-page">
+let editingLoveReasonId = null;
 
 
-    <div class="auth-container">
+/* =========================
+   LOAD LOVE REASONS
+========================= */
 
-        <!-- KEMBALI KE HOME -->
+async function loadLoveReasons() {
 
-        <a
-            href="index.html"
-            class="back-home"
-        >
-            ← Back to our album
-        </a>
+    const container =
+        document.getElementById(
+            "love-reasons-list"
+        );
 
+    if (!container) return;
 
-        <!-- LOGIN BOX -->
+    try {
 
-        <div class="auth-box">
+        const {
+            data,
+            error
+        } = await db
+            .from("love_reasons")
+            .select("*")
+            .order("created_at", {
+                ascending: true
+            });
 
-            <p class="small-title">
-                OUR LITTLE ALBUM
+        if (error) {
+            throw error;
+        }
+
+        loveReasonsData = data || [];
+
+        await renderLoveReasons();
+
+    } catch (error) {
+
+        console.error(
+            "Error loading love reasons:",
+            error
+        );
+
+        container.innerHTML = `
+            <p class="love-reasons-loading">
+                Failed to load our reasons.
             </p>
+        `;
+    }
+}
 
-            <h1>
-                Welcome back.
-            </h1>
 
-            <p class="auth-description">
-                Masuk untuk melanjutkan cerita
-                dan menambahkan kenangan baru.
+/* =========================
+   RENDER LOVE REASONS
+========================= */
+
+async function renderLoveReasons() {
+
+    const container =
+        document.getElementById(
+            "love-reasons-list"
+        );
+
+    if (!container) return;
+
+
+    if (
+        !loveReasonsData ||
+        loveReasonsData.length === 0
+    ) {
+
+        container.innerHTML = `
+            <p class="love-reasons-loading">
+                Our reasons haven't been added yet.
             </p>
+        `;
+
+        return;
+    }
 
 
-            <form id="login-form">
+    const {
+        data: {
+            user
+        }
+    } = await db.auth.getUser();
 
 
-                <!-- EMAIL -->
+    container.innerHTML =
+        loveReasonsData.map(
+            (item, index) => {
 
-                <div class="form-group">
+                const isOwner =
+                    user &&
+                    item.created_by === user.id;
 
-                    <label for="email">
-                        Email
-                    </label>
 
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="your@email.com"
-                        required
+                return `
+                    <article
+                        class="love-reason-card"
                     >
 
-                </div>
+                        <div
+                            class="love-reason-number"
+                        >
+                            ${String(
+                                index + 1
+                            ).padStart(2, "0")}
+                        </div>
 
 
-                <!-- PASSWORD -->
+                        <div
+                            class="love-reason-content"
+                        >
 
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Masukkan password"
-                        required
-                    >
-
-                </div>
+                            <h3>
+                                ${escapeLoveReasonHTML(
+                                    item.title
+                                )}
+                            </h3>
 
 
-                <!-- BUTTON -->
-
-                <button
-                    type="submit"
-                    class="auth-button"
-                >
-                    Login
-                </button>
-
-
-            </form>
-
-
-            <!-- MESSAGE -->
-
-            <p
-                id="login-message"
-                class="auth-message"
-            ></p>
+                            ${
+                                item.description
+                                ? `
+                                    <p>
+                                        ${escapeLoveReasonHTML(
+                                            item.description
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                            }
 
 
-            <!-- REGISTER -->
+                            ${
+                                isOwner
+                                ? `
+                                    <div
+                                        class="love-reason-card-actions"
+                                    >
 
-            <p class="auth-switch">
+                                        <button
+                                            type="button"
+                                            class="love-reason-edit-btn"
+                                            data-id="${item.id}"
+                                        >
+                                            Edit
+                                        </button>
 
-                Belum punya akun?
+                                        <button
+                                            type="button"
+                                            class="love-reason-delete-btn"
+                                            data-id="${item.id}"
+                                        >
+                                            Delete
+                                        </button>
 
-                <a href="register.html">
-                    Create an account
-                </a>
+                                    </div>
+                                `
+                                : ""
+                            }
 
-            </p>
+                        </div>
 
-        </div>
+                    </article>
+                `;
 
-    </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="auth.js"></script>
+            }
+        ).join("");
 
-</body>
 
-</html>
+    attachLoveReasonActions();
+}
+
+
+/* =========================
+   AUTH / ADD BUTTON
+========================= */
+
+async function updateLoveReasonActions() {
+
+    const actions =
+        document.getElementById(
+            "love-reasons-actions"
+        );
+
+    if (!actions) return;
+
+
+    const {
+        data: {
+            user
+        }
+    } = await db.auth.getUser();
+
+
+    if (user) {
+
+        actions.style.display = "flex";
+
+    } else {
+
+        actions.style.display = "none";
+
+    }
+}
+
+
+/* =========================
+   OPEN MODAL
+========================= */
+
+function openLoveReasonModal() {
+
+    const modal = document.getElementById("love-reason-modal");
+
+    const modalTitle =
+        document.getElementById("love-reason-modal-title");
+
+    const message =
+        document.getElementById("love-reason-form-message");
+
+    if (!modal) return;
+
+    modal.style.display = "flex";
+
+    if (modalTitle) {
+        modalTitle.textContent = editingLoveReasonId
+            ? "Edit This Reason"
+            : "Add a Reason";
+    }
+
+    if (message) {
+        message.textContent = "";
+    }
+
+    document.body.style.overflow = "hidden";
+}
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeLoveReasonModal() {
+
+    const modal =
+        document.getElementById(
+            "love-reason-modal"
+        );
+
+    const form =
+        document.getElementById(
+            "love-reason-form"
+        );
+
+
+    if (!modal) return;
+
+
+    modal.style.display = "none";
+
+
+    document.body.style.overflow = "";
+
+
+    editingLoveReasonId = null;
+
+
+    if (form) {
+
+        form.reset();
+
+    }
+
+
+    const idInput =
+        document.getElementById(
+            "love-reason-id"
+        );
+
+    if (idInput) {
+
+        idInput.value = "";
+
+    }
+
+
+    const modalTitle =
+        document.getElementById(
+            "love-reason-modal-title"
+        );
+
+    if (modalTitle) {
+
+        modalTitle.textContent =
+            "Add a Reason";
+
+    }
+}
+
+
+/* =========================
+   PREPARE ADD
+========================= */
+
+function prepareAddLoveReason() {
+
+    editingLoveReasonId = null;
+
+    const form = document.getElementById("love-reason-form");
+
+    if (form) {
+        form.reset();
+    }
+
+    const idInput = document.getElementById("love-reason-id");
+
+    if (idInput) {
+        idInput.value = "";
+    }
+
+    openLoveReasonModal();
+}
+
+/* =========================
+   PREPARE EDIT
+========================= */
+
+function prepareEditLoveReason(id) {
+
+    const item =
+        loveReasonsData.find(
+            reason =>
+                reason.id === id
+        );
+
+
+    if (!item) return;
+
+
+    editingLoveReasonId = id;
+
+
+    document.getElementById(
+        "love-reason-id"
+    ).value = item.id;
+
+
+    document.getElementById(
+        "love-reason-title"
+    ).value = item.title || "";
+
+
+    document.getElementById(
+        "love-reason-description"
+    ).value = item.description || "";
+
+
+    openLoveReasonModal();
+}
+
+
+/* =========================
+   SAVE LOVE REASON
+========================= */
+
+async function saveLoveReason(event) {
+
+    event.preventDefault();
+
+
+    const submitButton =
+        document.getElementById(
+            "love-reason-submit-btn"
+        );
+
+
+    const message =
+        document.getElementById(
+            "love-reason-form-message"
+        );
+
+
+    const title =
+        document.getElementById(
+            "love-reason-title"
+        ).value.trim();
+
+
+    const description =
+        document.getElementById(
+            "love-reason-description"
+        ).value.trim();
+
+
+    if (!title) {
+
+        message.textContent =
+            "Reason is required.";
+
+        return;
+    }
+
+
+    const {
+        data: {
+            user
+        }
+    } = await db.auth.getUser();
+
+
+    if (!user) {
+
+        message.textContent =
+            "Please login first.";
+
+        return;
+    }
+
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+        "Saving...";
+
+
+    try {
+
+        const payload = {
+
+            title: title,
+
+            description:
+                description || null
+
+        };
+
+
+        /* =========================
+           UPDATE
+        ========================= */
+
+        if (editingLoveReasonId) {
+
+            const {
+                error
+            } = await db
+                .from("love_reasons")
+                .update(payload)
+                .eq(
+                    "id",
+                    editingLoveReasonId
+                )
+                .eq(
+                    "created_by",
+                    user.id
+                );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+        } else {
+
+            /* =========================
+               CREATE
+            ========================= */
+
+            payload.created_by =
+                user.id;
+
+
+            const {
+                error
+            } = await db
+                .from("love_reasons")
+                .insert([
+                    payload
+                ]);
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+        }
+
+
+        closeLoveReasonModal();
+
+
+        await loadLoveReasons();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving love reason:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Failed to save reason.";
+
+    } finally {
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+            "Save Reason";
+
+    }
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+async function deleteLoveReason(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this reason?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    const {
+        data: {
+            user
+        }
+    } = await db.auth.getUser();
+
+
+    if (!user) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from("love_reasons")
+            .delete()
+            .eq(
+                "id",
+                id
+            )
+            .eq(
+                "created_by",
+                user.id
+            );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        await loadLoveReasons();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error deleting love reason:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Failed to delete reason."
+        );
+    }
+}
+
+
+/* =========================
+   BUTTON EVENTS
+========================= */
+
+/* =========================
+   BUTTON EVENTS
+========================= */
+
+function attachLoveReasonActions() {
+
+    const addButton =
+        document.getElementById(
+            "add-love-reason-btn"
+        );
+
+    if (addButton) {
+
+        addButton.onclick =
+            prepareAddLoveReason;
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".love-reason-edit-btn"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    prepareEditLoveReason(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(
+            ".love-reason-delete-btn"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    deleteLoveReason(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        });
+}
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeLoveReasonHTML(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+
+/* =========================
+   MODAL EVENTS
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const closeButton =
+            document.getElementById(
+                "love-reason-modal-close"
+            );
+
+
+        const modal =
+            document.getElementById(
+                "love-reason-modal"
+            );
+
+
+        const form =
+            document.getElementById(
+                "love-reason-form"
+            );
+
+
+        if (closeButton) {
+
+            closeButton.addEventListener(
+                "click",
+                closeLoveReasonModal
+            );
+
+        }
+
+
+        if (modal) {
+
+            modal.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === modal
+                    ) {
+
+                        closeLoveReasonModal();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        if (form) {
+
+            form.addEventListener(
+                "submit",
+                saveLoveReason
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+async function initializeLoveReasons() {
+
+    await updateLoveReasonActions();
+
+    await loadLoveReasons();
+
+    const addButton =
+        document.getElementById(
+            "add-love-reason-btn"
+        );
+
+    if (addButton) {
+
+        addButton.addEventListener(
+            "click",
+            prepareAddLoveReason
+        );
+
+    }
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeLoveReasons
+);
