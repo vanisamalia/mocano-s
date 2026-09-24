@@ -603,10 +603,6 @@ async function createMemoryCard(
                     : ""
             }
 
-            <p class="memory-view-hint">
-                Click to open memory
-            </p>
-
             <div class="memory-card-actions">
 
                 ${
