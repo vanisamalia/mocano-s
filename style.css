@@ -2594,13 +2594,20 @@ footer p:last-child {
 ========================= */
 
 .timeline-card-actions {
+    width: 100%;
     display: flex;
+    justify-content: center !important;
+    align-items: center;
+    gap: 12px;
+    margin: 18px auto 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
 
-    gap: 10px;
-
-    justify-content: flex-end;
-
-    margin-top: 20px;
+.timeline-card-actions button {
+    display: inline-block;
+    margin: 0;
 }
 
 .timeline-item:nth-child(even)
