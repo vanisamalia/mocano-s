@@ -71,20 +71,12 @@ async function renderTimeline() {
         return;
     }
 
-    let currentUser = null;
-
     const {
         data: {
             user
         }
     } = await db.auth.getUser();
 
-    currentUser = user;
-
-
-    /* =========================
-       CREATE TIMELINE ROWS
-    ========================= */
 
     const itemsPerRow = 4;
 
@@ -95,43 +87,41 @@ async function renderTimeline() {
         i < timelineData.length;
         i += itemsPerRow
     ) {
-
         rows.push(
             timelineData.slice(
                 i,
                 i + itemsPerRow
             )
         );
-
     }
 
-
-    /* =========================
-       RENDER ROWS
-    ========================= */
 
     container.innerHTML = rows
         .map((row, rowIndex) => {
 
-            const isReversed =
+            const isReverse =
                 rowIndex % 2 === 1;
 
             const displayRow =
-                isReversed
+                isReverse
                     ? [...row].reverse()
                     : row;
 
+
             return `
                 <div
-                    class="timeline-row ${
-                        isReversed
-                            ? "timeline-row-reverse"
-                            : "timeline-row-normal"
-                    }"
+                    class="
+                        timeline-row
+                        ${
+                            isReverse
+                                ? "timeline-row-reverse"
+                                : "timeline-row-normal"
+                        }
+                    "
                 >
 
                     ${displayRow
-                        .map((item) => {
+                        .map((item, index) => {
 
                             const date =
                                 new Date(
@@ -148,10 +138,11 @@ async function renderTimeline() {
                                     }
                                 );
 
+
                             const isOwner =
-                                currentUser &&
+                                user &&
                                 item.created_by ===
-                                    currentUser.id;
+                                    user.id;
 
 
                             return `
@@ -253,11 +244,41 @@ async function renderTimeline() {
 
                                     </div>
 
+                                    ${
+                                        index <
+                                        displayRow.length - 1
+                                            ? `
+                                                <span
+                                                    class="timeline-horizontal-line"
+                                                ></span>
+                                            `
+                                            : ""
+                                    }
+
                                 </article>
                             `;
 
                         })
                         .join("")}
+
+
+                    ${
+                        rowIndex <
+                        rows.length - 1
+                            ? `
+                                <span
+                                    class="
+                                        timeline-turn-line
+                                        ${
+                                            isReverse
+                                                ? "turn-left"
+                                                : "turn-right"
+                                        }
+                                    "
+                                ></span>
+                            `
+                            : ""
+                    }
 
                 </div>
             `;
