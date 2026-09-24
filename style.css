@@ -561,7 +561,7 @@ a {
 .memory-content p:last-child {
     color: #6f665e;
 
-    font-size: 14px;
+    font-size: 10px;
 
     line-height: 1.7;
 }
@@ -718,105 +718,99 @@ a {
 
 .timeline {
     padding: 120px 6%;
-
     background: #f8f5f0;
 }
 
 .timeline-header {
     max-width: 700px;
-
     margin: 0 auto 80px;
-
     text-align: center;
 }
 
 .timeline-header .small-title {
     margin-bottom: 20px;
-
     color: #9d8060;
 }
 
 .timeline-header h2 {
     font-family: Georgia, serif;
-
-    font-size: 48px;
-
+    font-size: 46px;
     font-weight: normal;
-
     line-height: 1.2;
-
     margin-bottom: 20px;
-
     color: #3f3831;
 }
 
 .timeline-header > p:last-child {
     max-width: 600px;
-
     margin: 0 auto;
-
     color: #6f665e;
-
     line-height: 1.8;
 }
 
 
-/* TIMELINE CONTAINER */
+/* =========================
+   TIMELINE CONTAINER
+========================= */
 
 .timeline-container {
     position: relative;
 
-    max-width: 900px;
+    max-width: 1100px;
 
     margin: 0 auto;
 
-    padding: 20px 0;
+    padding: 30px 0;
 }
 
 
-/* VERTICAL LINE */
+/* =========================
+   TIMELINE ROW
+========================= */
 
-.timeline-container::before {
-    content: "";
+.timeline-row {
+    position: relative;
 
-    position: absolute;
+    display: grid;
 
-    top: 0;
-    bottom: 0;
+    grid-template-columns:
+        repeat(4, 1fr);
 
-    left: 50%;
+    min-height: 270px;
 
-    width: 1px;
-
-    background: #cfc5b8;
-
-    transform: translateX(-50%);
+    align-items: start;
 }
 
 
-/* TIMELINE ITEM */
+/* =========================
+   TIMELINE ITEM
+========================= */
 
 .timeline-item {
     position: relative;
 
-    display: flex;
-
     width: 100%;
 
-    margin-bottom: 80px;
+    min-width: 0;
+
+    margin: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
 }
 
-.timeline-item:last-child {
-    margin-bottom: 0;
-}
 
-
-/* DOT */
+/* =========================
+   DOT
+========================= */
 
 .timeline-dot {
     position: absolute;
 
-    top: 8px;
+    top: 0;
 
     left: 50%;
 
@@ -831,48 +825,134 @@ a {
 
     transform: translateX(-50%);
 
-    z-index: 2;
+    z-index: 3;
 }
 
 
-/* CONTENT */
+/* =========================
+   HORIZONTAL LINE
+========================= */
+
+.timeline-item:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    top: 6px;
+
+    height: 1px;
+
+    background: #cfc5b8;
+
+    z-index: 1;
+}
+
+
+/* NORMAL ROW
+   kiri → kanan
+*/
+
+.timeline-row-normal
+.timeline-item:not(:last-child)::after {
+
+    left: 50%;
+
+    right: -50%;
+}
+
+
+/* REVERSE ROW
+   kanan → kiri
+*/
+
+.timeline-row-reverse
+.timeline-item:not(:last-child)::after {
+
+    left: -50%;
+
+    right: 50%;
+}
+
+
+/* =========================
+   TURNING LINE
+========================= */
+
+/* Normal row:
+   turun di kanan
+*/
+
+.timeline-row-normal:not(:last-child)::after {
+
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+
+    top: 6px;
+
+    width: 1px;
+
+    height: 270px;
+
+    background: #cfc5b8;
+
+    z-index: 1;
+}
+
+
+/* Reverse row:
+   turun di kiri
+*/
+
+.timeline-row-reverse:not(:last-child)::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 6px;
+
+    width: 1px;
+
+    height: 270px;
+
+    background: #cfc5b8;
+
+    z-index: 1;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
 
 .timeline-content {
-    width: calc(50% - 50px);
+    width: 100%;
 
-    padding: 0 10px;
+    padding: 35px 18px 0;
 
     color: #3f3831;
+
+    text-align: center;
+
+    box-sizing: border-box;
 }
 
 
-/* LEFT / RIGHT ALTERNATING */
-
-.timeline-item:nth-child(odd) {
-    justify-content: flex-start;
-}
-
-.timeline-item:nth-child(odd) .timeline-content {
-    text-align: right;
-}
-
-.timeline-item:nth-child(even) {
-    justify-content: flex-end;
-}
-
-.timeline-item:nth-child(even) .timeline-content {
-    text-align: left;
-}
-
-
-/* DATE */
+/* =========================
+   DATE
+========================= */
 
 .timeline-date {
     margin-bottom: 10px;
 
     color: #9d8060;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: bold;
 
@@ -882,12 +962,14 @@ a {
 }
 
 
-/* TITLE */
+/* =========================
+   TITLE
+========================= */
 
 .timeline-content h3 {
     font-family: Georgia, serif;
 
-    font-size: 30px;
+    font-size: 24px;
 
     font-weight: normal;
 
@@ -899,54 +981,58 @@ a {
 }
 
 
-/* LOCATION */
+/* =========================
+   LOCATION
+========================= */
 
 .timeline-location {
     margin-bottom: 12px;
 
     color: #8a7d70;
 
-    font-size: 14px;
+    font-size: 13px;
 
     font-style: italic;
 }
 
 
-/* STORY */
+/* =========================
+   STORY
+========================= */
 
 .timeline-story {
     color: #6f665e;
 
-    line-height: 1.8;
+    font-size: 13px;
+
+    line-height: 1.7;
 }
 
 
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
 
 .timeline-image {
     display: block;
 
     width: 100%;
 
-    max-width: 360px;
+    max-width: 210px;
 
-    margin-top: 20px;
+    height: 140px;
+
+    margin: 20px auto 0;
 
     border-radius: 12px;
 
     object-fit: cover;
 }
 
-.timeline-item:nth-child(odd) .timeline-image {
-    margin-left: auto;
-}
 
-.timeline-item:nth-child(even) .timeline-image {
-    margin-right: auto;
-}
-
-
-/* LOADING */
+/* =========================
+   LOADING
+========================= */
 
 .timeline-loading {
     padding: 40px;
@@ -955,7 +1041,133 @@ a {
 
     color: #756a60;
 }
+@media (max-width: 900px) {
 
+    .timeline-row {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        min-height: 250px;
+    }
+
+    .timeline-row-normal
+    .timeline-item:not(:last-child)::after,
+    .timeline-row-reverse
+    .timeline-item:not(:last-child)::after {
+
+        display: none;
+    }
+
+    .timeline-row-normal:not(:last-child)::after,
+    .timeline-row-reverse:not(:last-child)::after {
+
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .timeline-row {
+        grid-template-columns: 1fr;
+
+        min-height: auto;
+
+        gap: 50px;
+    }
+
+    .timeline-item {
+        min-height: auto;
+    }
+
+    .timeline-content {
+        padding: 35px 15px 0;
+    }
+
+    .timeline-dot {
+        left: 50%;
+    }
+
+    .timeline-image {
+        max-width: 100%;
+    }
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+    .timeline-container {
+        grid-template-columns: repeat(2, 1fr);
+
+        row-gap: 80px;
+    }
+
+    .timeline-item:nth-child(n) {
+        grid-row: auto;
+        grid-column: auto;
+    }
+
+    .timeline-item {
+        min-height: 170px;
+    }
+
+    .timeline-item::after,
+    .timeline-item::before {
+        display: none;
+    }
+
+    .timeline-content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .timeline {
+        padding: 90px 6%;
+    }
+
+    .timeline-header {
+        margin-bottom: 60px;
+    }
+
+    .timeline-header h2 {
+        font-size: 36px;
+    }
+
+    .timeline-container {
+        grid-template-columns: 1fr;
+
+        row-gap: 60px;
+    }
+
+    .timeline-item {
+        min-height: auto;
+    }
+
+    .timeline-dot {
+        left: 20px;
+    }
+
+    .timeline-content {
+        padding: 35px 15px 0 50px;
+
+        text-align: left;
+    }
+
+    .timeline-image {
+        margin-left: 0;
+        margin-right: auto;
+    }
+}
 
 /* =========================
    ABOUT
@@ -3011,7 +3223,7 @@ body.modal-open {
 .love-reasons-header h2 {
     font-family: Georgia, serif;
 
-    font-size: 48px;
+    font-size: 52px;
 
     font-weight: normal;
 
@@ -3031,6 +3243,8 @@ body.modal-open {
     color: rgba(255, 250, 245, 0.84);
 
     line-height: 1.8;
+
+    font-size: 18px;
 }
 
 
@@ -3130,7 +3344,7 @@ body.modal-open {
 
     font-family: Georgia, serif;
 
-    font-size: 28px;
+    font-size: 22px;
 
     font-weight: normal;
 
@@ -3149,7 +3363,8 @@ body.modal-open {
 .love-reason-content > p {
     color: #6f665e;
 
-    font-size: 13px;
+    font-size: 8px;
+
     line-height: 1.7;
 
     display: -webkit-box;
@@ -5101,21 +5316,27 @@ body.modal-open {
     color: #8a7d72;
 }
 
-.movie-detail-description,
+.movie-detail-description {
+    margin-bottom: 22px;
+
+    line-height: 1.8;
+    font-size: 18x;
+    color: #5d5148;
+}
 .movie-detail-note {
     margin-bottom: 22px;
 
     line-height: 1.8;
-
-    color: #514941;
+    font-size: 15px;
+    color: #5d5148;
 }
 
 .movie-detail-date {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 
     font-size: 13px;
 
-    color: #777;
+    color: #080808;
 }
 
 
@@ -5324,32 +5545,86 @@ body.modal-open {
 
 }
 
-/* =========================
-   MEMORY CARD - TEXT
-========================= */
+/* =========================================================
+   MEMORY CARD - UKURAN SAMA
+========================================================= */
 
 .memory-card {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
     overflow: hidden;
 }
 
-.memory-card-info {
-    padding: 20px 20px;
+
+/* =========================================================
+   MEMORY IMAGE - 50%
+========================================================= */
+
+.memory-card .memory-image {
+    width: 100%;
+    height: 50%;
+    flex: 0 0 50%;
+    overflow: hidden;
 }
 
-.memory-card-info h3 {
-    font-size: 18px;
-    line-height: 1.4;
+.memory-card .memory-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   MEMORY CONTENT - 50%
+========================================================= */
+
+.memory-content {
+    width: 100%;
+    height: 50%;
+    flex: 0 0 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* Date */
+
+.memory-date {
+    flex-shrink: 0;
     margin-bottom: 8px;
 }
 
-.memory-card-info p,
-.memory-card-story {
-    font-size: 13px;
-    line-height: 1.7;
+
+/* Title */
+
+.memory-content h3 {
+    flex-shrink: 0;
+    margin: 0 0 10px;
+
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.memory-content p:last-child {
+    flex: 1;
+    min-height: 0;
 
     margin: 0;
 
-    color: #6f655d;
+    color: #6f665e;
+    font-size: 5px;
+    line-height: 1.7;
 
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -5357,7 +5632,445 @@ body.modal-open {
 
     overflow: hidden;
     text-overflow: ellipsis;
-
-    max-width: 100%;
 }
 
+
+/* =========================================================
+   EDIT & DELETE
+========================================================= */
+
+.memory-card-actions {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-top: 10px;
+    padding-top: 8px;
+
+    border-top: 1px solid #eee8e2;
+}
+
+.memory-card-actions button {
+    padding: 4px 0;
+
+    border: none;
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.2;
+
+    cursor: pointer;
+    opacity: 1 !important;
+}
+
+.memory-edit-btn {
+    background: transparent !important;
+    color: #6f655d !important;
+}
+
+.memory-delete-btn {
+    background: transparent !important;
+    color: #9a8178 !important;
+}
+
+.memory-card:hover .memory-card-actions,
+.memory-card:hover .memory-card-actions button {
+    opacity: 1 !important;
+}
+
+.memory-edit-btn:hover,
+.memory-delete-btn:hover {
+    opacity: 0.65 !important;
+}
+
+/* =========================================================
+   FINAL MEMORY CARD - 50% IMAGE / 50% CONTENT
+========================================================= */
+
+.memory-card {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 500px;
+
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FOTO = 50% CARD
+========================================================= */
+
+.memory-card .memory-image {
+    position: relative;
+
+    width: 100%;
+    height: 250px !important;
+    min-height: 250px;
+    max-height: 250px;
+
+    flex: 0 0 250px;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* FOTO DI DALAM */
+
+.memory-card .memory-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* =========================================================
+   CONTENT = 50% CARD
+========================================================= */
+
+.memory-content {
+    width: 100%;
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
+
+    flex: 0 0 250px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+
+/* DATE */
+
+.memory-date {
+    flex-shrink: 0;
+
+    margin-bottom: 8px;
+
+    font-size: 10px;
+}
+
+
+/* TITLE */
+
+.memory-content h3 {
+    flex-shrink: 0;
+
+    margin: 0 0 10px;
+
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.memory-content p:last-child {
+    flex: 1;
+
+    min-height: 0;
+
+    margin: 0;
+
+    color: #6f665e;
+
+    font-size: 13px;
+    line-height: 1.7;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   EDIT & DELETE
+========================================================= */
+
+.memory-card-actions {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 10px;
+    padding-top: 8px;
+
+    border-top: 1px solid #eee8e2;
+}
+
+.memory-card-actions button {
+    padding: 4px 0;
+
+    border: none;
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    opacity: 1 !important;
+}
+
+.memory-edit-btn {
+    background: transparent !important;
+    color: #6f655d !important;
+}
+
+.memory-delete-btn {
+    background: transparent !important;
+    color: #9a8178 !important;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.memory-card:hover .memory-content,
+.memory-card:hover .memory-date,
+.memory-card:hover h3,
+.memory-card:hover p,
+.memory-card:hover .memory-card-actions,
+.memory-card:hover .memory-card-actions button {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.memory-edit-btn:hover,
+.memory-delete-btn:hover {
+    opacity: 0.65 !important;
+}
+/* =========================================================
+   MEMORY CARD - EXACT 50 / 50
+========================================================= */
+
+.memory-card {
+    display: grid;
+    grid-template-rows: 250px 250px;
+
+    width: 100%;
+    height: 500px;
+
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SEMUA JENIS CONTAINER FOTO
+========================================================= */
+
+.memory-card .memory-image,
+.memory-card .memory-card-image {
+    grid-row: 1;
+
+    width: 100% !important;
+    height: 250px !important;
+    min-height: 250px !important;
+    max-height: 250px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* Jika ada gambar yang langsung berada di dalam card */
+
+.memory-card > img {
+    grid-row: 1;
+
+    width: 100% !important;
+    height: 250px !important;
+    min-height: 250px !important;
+    max-height: 250px !important;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* =========================================================
+   FOTO
+========================================================= */
+
+.memory-card .memory-image img,
+.memory-card .memory-card-image img {
+    width: 100% !important;
+    height: 100% !important;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* =========================================================
+   CONTENT = 50%
+========================================================= */
+
+.memory-card .memory-content {
+    grid-row: 2;
+
+    width: 100%;
+    height: 250px !important;
+    min-height: 250px !important;
+    max-height: 250px !important;
+
+    padding: 20px 25px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.memory-date {
+    flex-shrink: 0;
+
+    margin-bottom: 8px;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.memory-content h3 {
+    flex-shrink: 0;
+
+    margin: 0 0 10px;
+
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.memory-content p:last-child {
+    flex: 1;
+    min-height: 0;
+
+    margin: 0;
+
+    color: #6f665e;
+
+    font-size: 12px;
+    line-height: 1.7;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   EDIT & DELETE
+========================================================= */
+
+.memory-card-actions {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 10px;
+    padding-top: 8px;
+
+    border-top: 1px solid #eee8e2;
+}
+
+.memory-card-actions button {
+    padding: 4px 0;
+
+    border: none;
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    opacity: 1 !important;
+}
+
+.memory-edit-btn {
+    background: transparent !important;
+    color: #6f655d !important;
+}
+
+.memory-delete-btn {
+    background: transparent !important;
+    color: #9a8178 !important;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.memory-card:hover .memory-content,
+.memory-card:hover .memory-date,
+.memory-card:hover h3,
+.memory-card:hover p,
+.memory-card:hover .memory-card-actions,
+.memory-card:hover .memory-card-actions button {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.memory-edit-btn:hover,
+.memory-delete-btn:hover {
+    opacity: 0.65 !important;
+}
