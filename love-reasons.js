@@ -56,9 +56,7 @@ async function loadLoveReasons() {
 }
 
 
-/* =========================
-   RENDER LOVE REASONS
-========================= */
+//* =========================RENDER LOVE REASONS========================= */
 
 async function renderLoveReasons() {
 
@@ -94,7 +92,7 @@ async function renderLoveReasons() {
 
     container.innerHTML =
         loveReasonsData.map(
-            (item, index) => {
+            (item) => {
 
                 const isOwner =
                     user &&
@@ -104,67 +102,46 @@ async function renderLoveReasons() {
                 return `
                     <article
                         class="love-reason-card"
+                        data-love-reason-id="${item.id}"
                     >
 
-                        <div
-                            class="love-reason-number"
-                        >
-                            ${String(
-                                index + 1
-                            ).padStart(2, "0")}
-                        </div>
-
-
-                        <div
-                            class="love-reason-content"
-                        >
+                        <div class="love-reason-card-content">
 
                             <h3>
-                                ${escapeLoveReasonHTML(
-                                    item.title
-                                )}
+                                ${escapeLoveReasonHTML(item.title)}
                             </h3>
 
-
-                            ${
-                                item.description
-                                ? `
-                                    <p>
-                                        ${escapeLoveReasonHTML(
-                                            item.description
-                                        )}
-                                    </p>
-                                `
-                                : ""
-                            }
+                            <p>
+                                ${escapeLoveReasonHTML(
+                                    item.description || ""
+                                )}
+                            </p>
 
 
                             ${
                                 isOwner
-                                ? `
-                                    <div
-                                        class="love-reason-card-actions"
-                                    >
+                                    ? `
+                                        <div class="love-reason-card-actions">
 
-                                        <button
-                                            type="button"
-                                            class="love-reason-edit-btn"
-                                            data-id="${item.id}"
-                                        >
-                                            Edit
-                                        </button>
+                                            <button
+                                                type="button"
+                                                class="love-reason-edit-btn"
+                                                data-id="${item.id}"
+                                            >
+                                                Edit
+                                            </button>
 
-                                        <button
-                                            type="button"
-                                            class="love-reason-delete-btn"
-                                            data-id="${item.id}"
-                                        >
-                                            Delete
-                                        </button>
+                                            <button
+                                                type="button"
+                                                class="love-reason-delete-btn"
+                                                data-id="${item.id}"
+                                            >
+                                                Delete
+                                            </button>
 
-                                    </div>
-                                `
-                                : ""
+                                        </div>
+                                    `
+                                    : ""
                             }
 
                         </div>
@@ -176,9 +153,230 @@ async function renderLoveReasons() {
         ).join("");
 
 
+    /* =========================
+       CARD CLICK
+    ========================= */
+
+    document
+        .querySelectorAll(
+            ".love-reason-card"
+        )
+        .forEach(
+            card => {
+
+                card.addEventListener(
+                    "click",
+                    event => {
+
+                        /*
+                         * Jangan buka detail
+                         * kalau yang diklik adalah
+                         * tombol Edit / Delete.
+                         */
+
+                        if (
+                            event.target.closest(
+                                ".love-reason-card-actions"
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        const reasonId =
+                            card.dataset.loveReasonId;
+
+
+                        openLoveReasonDetail(
+                            reasonId
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* =========================
+       BUTTON EVENTS
+    ========================= */
+
     attachLoveReasonActions();
 }
 
+
+/* =========================
+   OPEN LOVE REASON DETAIL
+========================= */
+
+async function openLoveReasonDetail(reasonId) {
+
+    const reason =
+        loveReasonsData.find(
+            item =>
+                item.id === reasonId
+        );
+
+
+    if (!reason) {
+        console.error(
+            "Love reason tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    const title =
+        document.getElementById(
+            "love-reason-detail-title"
+        );
+
+    const description =
+        document.getElementById(
+            "love-reason-detail-description"
+        );
+
+    const modal =
+        document.getElementById(
+            "love-reason-detail-modal"
+        );
+
+
+    if (
+        !title ||
+        !description ||
+        !modal
+    ) {
+        console.error(
+            "Element love reason detail tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    title.textContent =
+        reason.title || "";
+
+
+    description.textContent =
+        reason.description || "";
+
+
+    modal.style.display = "flex";
+
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+/* =========================
+   CLOSE LOVE REASON DETAIL
+========================= */
+
+function closeLoveReasonDetail() {
+
+    const modal =
+        document.getElementById(
+            "love-reason-detail-modal"
+        );
+
+
+    if (!modal) return;
+
+
+    modal.style.display = "none";
+
+
+    document.body.style.overflow =
+        "";
+}
+/* =========================
+   LOVE REASON DETAIL EVENTS
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const closeButton =
+            document.getElementById(
+                "love-reason-detail-close"
+            );
+
+
+        const modal =
+            document.getElementById(
+                "love-reason-detail-modal"
+            );
+
+
+        if (closeButton) {
+
+            closeButton.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    closeLoveReasonDetail();
+
+                }
+            );
+
+        }
+
+
+        if (modal) {
+
+            modal.addEventListener(
+                "click",
+                event => {
+
+                    /*
+                     * Klik area gelap di luar
+                     * card detail = tutup.
+                     */
+
+                    if (
+                        event.target === modal
+                    ) {
+
+                        closeLoveReasonDetail();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Tombol ESC juga menutup detail.
+         */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeLoveReasonDetail();
+
+                }
+
+            }
+        );
+
+    }
+);
 
 /* =========================
    AUTH / ADD BUTTON
@@ -607,16 +805,13 @@ async function deleteLoveReason(id) {
    BUTTON EVENTS
 ========================= */
 
-/* =========================
-   BUTTON EVENTS
-========================= */
-
 function attachLoveReasonActions() {
 
     const addButton =
         document.getElementById(
             "add-love-reason-btn"
         );
+
 
     if (addButton) {
 
@@ -630,40 +825,46 @@ function attachLoveReasonActions() {
         .querySelectorAll(
             ".love-reason-edit-btn"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.onclick =
+                    event => {
 
-                    prepareEditLoveReason(
-                        button.dataset.id
-                    );
+                        event.preventDefault();
+                        event.stopPropagation();
 
-                }
-            );
+                        prepareEditLoveReason(
+                            button.dataset.id
+                        );
 
-        });
+                    };
+
+            }
+        );
 
 
     document
         .querySelectorAll(
             ".love-reason-delete-btn"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.onclick =
+                    event => {
 
-                    deleteLoveReason(
-                        button.dataset.id
-                    );
+                        event.preventDefault();
+                        event.stopPropagation();
 
-                }
-            );
+                        deleteLoveReason(
+                            button.dataset.id
+                        );
 
-        });
+                    };
+
+            }
+        );
 }
 
 /* =========================
