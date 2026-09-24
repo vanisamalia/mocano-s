@@ -81,115 +81,193 @@ async function renderTimeline() {
 
     currentUser = user;
 
-    container.innerHTML = timelineData.map((item) => {
 
-        const date = new Date(item.event_date);
+    /* =========================
+       CREATE TIMELINE ROWS
+    ========================= */
 
-        const formattedDate =
-            date.toLocaleDateString(
-                "en-US",
-                {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                }
-            );
+    const itemsPerRow = 4;
 
-        const isOwner =
-            currentUser &&
-            item.created_by === currentUser.id;
+    const rows = [];
 
-        return `
-            <article class="timeline-item">
+    for (
+        let i = 0;
+        i < timelineData.length;
+        i += itemsPerRow
+    ) {
 
-                <div class="timeline-dot"></div>
+        rows.push(
+            timelineData.slice(
+                i,
+                i + itemsPerRow
+            )
+        );
 
-                <div class="timeline-content">
+    }
 
-                    <p class="timeline-date">
-                        ${formattedDate}
-                    </p>
 
-                    <h3>
-                        ${escapeTimelineHTML(item.title)}
-                    </h3>
+    /* =========================
+       RENDER ROWS
+    ========================= */
 
-                    ${
-                        item.location
-                        ? `
-                            <p class="timeline-location">
-                                ${escapeTimelineHTML(
-                                    item.location
-                                )}
-                            </p>
-                        `
-                        : ""
-                    }
+    container.innerHTML = rows
+        .map((row, rowIndex) => {
 
-                    ${
-                        item.story
-                        ? `
-                            <p class="timeline-story">
-                                ${escapeTimelineHTML(
-                                    item.story
-                                )}
-                            </p>
-                        `
-                        : ""
-                    }
+            const isReversed =
+                rowIndex % 2 === 1;
 
-                    ${
-                        item.image_url
-                        ? `
-                            <img
-                                src="${escapeTimelineAttribute(
-                                    item.image_url
-                                )}"
-                                alt="${escapeTimelineAttribute(
-                                    item.title
-                                )}"
-                                class="timeline-image"
-                            >
-                        `
-                        : ""
-                    }
+            const displayRow =
+                isReversed
+                    ? [...row].reverse()
+                    : row;
 
-                    ${
-                        isOwner
-                        ? `
-                            <div class="timeline-card-actions">
+            return `
+                <div
+                    class="timeline-row ${
+                        isReversed
+                            ? "timeline-row-reverse"
+                            : "timeline-row-normal"
+                    }"
+                >
 
-                                <button
-                                    type="button"
-                                    class="timeline-edit-btn"
-                                    data-id="${item.id}"
+                    ${displayRow
+                        .map((item) => {
+
+                            const date =
+                                new Date(
+                                    item.event_date
+                                );
+
+                            const formattedDate =
+                                date.toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric"
+                                    }
+                                );
+
+                            const isOwner =
+                                currentUser &&
+                                item.created_by ===
+                                    currentUser.id;
+
+
+                            return `
+                                <article
+                                    class="timeline-item"
                                 >
-                                    Edit
-                                </button>
 
-                                <button
-                                    type="button"
-                                    class="timeline-delete-btn"
-                                    data-id="${item.id}"
-                                >
-                                    Delete
-                                </button>
+                                    <div
+                                        class="timeline-dot"
+                                    ></div>
 
-                            </div>
-                        `
-                        : ""
-                    }
+                                    <div
+                                        class="timeline-content"
+                                    >
+
+                                        <p
+                                            class="timeline-date"
+                                        >
+                                            ${formattedDate}
+                                        </p>
+
+                                        <h3>
+                                            ${escapeTimelineHTML(
+                                                item.title
+                                            )}
+                                        </h3>
+
+                                        ${
+                                            item.location
+                                                ? `
+                                                    <p
+                                                        class="timeline-location"
+                                                    >
+                                                        ${escapeTimelineHTML(
+                                                            item.location
+                                                        )}
+                                                    </p>
+                                                `
+                                                : ""
+                                        }
+
+                                        ${
+                                            item.story
+                                                ? `
+                                                    <p
+                                                        class="timeline-story"
+                                                    >
+                                                        ${escapeTimelineHTML(
+                                                            item.story
+                                                        )}
+                                                    </p>
+                                                `
+                                                : ""
+                                        }
+
+                                        ${
+                                            item.image_url
+                                                ? `
+                                                    <img
+                                                        src="${escapeTimelineAttribute(
+                                                            item.image_url
+                                                        )}"
+                                                        alt="${escapeTimelineAttribute(
+                                                            item.title
+                                                        )}"
+                                                        class="timeline-image"
+                                                    >
+                                                `
+                                                : ""
+                                        }
+
+                                        ${
+                                            isOwner
+                                                ? `
+                                                    <div
+                                                        class="timeline-card-actions"
+                                                    >
+
+                                                        <button
+                                                            type="button"
+                                                            class="timeline-edit-btn"
+                                                            data-id="${item.id}"
+                                                        >
+                                                            Edit
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            class="timeline-delete-btn"
+                                                            data-id="${item.id}"
+                                                        >
+                                                            Delete
+                                                        </button>
+
+                                                    </div>
+                                                `
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                </article>
+                            `;
+
+                        })
+                        .join("")}
 
                 </div>
+            `;
 
-            </article>
-        `;
+        })
+        .join("");
 
-    }).join("");
 
     attachTimelineActions();
 }
-
 
 /* =========================
    AUTH CHECK
