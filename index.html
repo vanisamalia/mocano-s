@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>MOCANO'S</title>
+    <title>Login | Our Little Album</title>
 
     <link
         rel="stylesheet"
@@ -19,1160 +19,117 @@
 
 </head>
 
-<body>
+<body class="auth-page">
 
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+    <div class="auth-container">
 
-    <header class="navbar">
+        <!-- KEMBALI KE HOME -->
 
-        <div class="logo">
-            MOCANO'S
-        </div>
-
-
-        <nav>
-
-            <a href="#home">
-                Home
-            </a>
-
-            <a href="#memories">
-                Memories
-            </a>
-
-            <a href="#random-memory">
-                Random
-            </a>
-            <a href="#open-when">
-                Open When
-            </a>
-            <a href="#bucket-list">
-                Bucket
-            </a>
-            <a href="#soundtrack">
-                Songs
-            </a>
-            <a href="#timeline">
-                Timeline
-            </a>
-            <a href="#love-reasons">
-                Reasons
-            </a>
-
-            <a href="#about">
-                About Us
-            </a>
-            
-
-
-            <!-- BELUM LOGIN -->
-
-            <a
-                href="login.html"
-                class="login-button"
-                id="login-link"
-            >
-                Login
-            </a>
-
-
-            <!-- SUDAH LOGIN -->
-
-            <div
-                class="profile-menu"
-                id="profile-menu"
-                style="display: none;"
-            >
-
-                <button
-                    type="button"
-                    class="profile-button"
-                    id="profile-button"
-                >
-                    Profile
-                    <span class="profile-arrow">
-                        ▼
-                    </span>
-                </button>
-
-
-                <div
-                    class="profile-dropdown"
-                    id="profile-dropdown"
-                >
-
-                    <button
-                        type="button"
-                        id="logout-btn"
-                    >
-                        Logout
-                    </button>
-
-                </div>
-
-            </div>
-
-        </nav>
-
-    </header>
-
-
-
-    <!-- =========================
-         HERO
-    ========================== -->
-
-    <section
-        class="hero"
-        id="home"
-    >
-
-        <div class="hero-content">
-
-            <p class="small-title">
-                MOCANO FILES
-            </p>
-
-            <h1>
-                Where every day <br>
-                becomes a <br>
-                piece of us.
-            </h1>
-
-            <p class="hero-description">
-                A little place for the moments we share, 
-                the memories we keep, 
-                and all the days still waiting for us.
-            </p>
-
-            <a
-                href="#memories"
-                class="main-button"
-            >
-                Explore Our Memories
-            </a>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =========================
-         MEMORIES
-    ========================== -->
-
-    <section class="memories" id="memories">
-
-    <div class="memories-header">
-
-        <div class="section-heading">
-
-            <p class="small-title">
-                MOCANO's MEMORIES
-            </p>
-
-            <h2>
-                Where our moments find a place to stay.
-            </h2>
-
-            <p>
-                It’s never about how many moments we have,
-                but how each one leaves a little piece of us behind -
-                a little story, a quiet feeling, a memory that stays,
-                long after the day has passed.
-            </p>
-
-        </div>
-
-    </div>
-
-    <div
-        class="memory-actions"
-        id="memory-actions"
-        style="display: none;"
-    >
-        <button
-            type="button"
-            class="main-button"
-            id="add-memory-btn"
+        <a
+            href="index.html"
+            class="back-home"
         >
-            + Add Memory
-        </button>
-    </div>
+            ← Back to our album
+        </a>
 
-    <div
-        class="memory-container"
-        id="memory-list"
-    >
-        <p class="memory-loading">
-            Memuat memories...
-        </p>
-    </div>
 
-</section>
-<!-- RANDOM MEMORY -->
-<section class="random-memory" id="random-memory">
+        <!-- LOGIN BOX -->
 
-    <div class="random-memory-content">
-
-        <p class="small-title">
-            RANDOM MEMORY
-        </p>
-
-        <h2>
-            A little memory, chosen just for you.
-        </h2>
-
-        <p class="random-memory-description">
-            Sometimes the best memories are the ones
-            we find when we aren't looking for them.
-        </p>
-
-        <button
-            type="button"
-            class="main-button"
-            id="random-memory-btn"
-        >
-            Open a Random Memory
-        </button>
-
-    </div>
-
-</section>
-
-
-<!-- RANDOM MEMORY MODAL -->
-<div
-    class="random-memory-modal"
-    id="random-memory-modal"
-    style="display: none;"
->
-
-    <div class="random-memory-modal-content">
-
-        <button
-            type="button"
-            class="random-memory-close"
-            id="random-memory-close"
-        >
-            ×
-        </button>
-
-        <p class="small-title">
-            A RANDOM MEMORY
-        </p>
-
-        <div
-            class="random-memory-result"
-            id="random-memory-result"
-        >
-        </div>
-
-        <button
-            type="button"
-            class="main-button random-memory-again"
-            id="random-memory-again"
-        >
-            Another Memory
-        </button>
-
-    </div>
-
-</div>
-
-<!-- OPEN WHEN -->
-<section class="open-when" id="open-when">
-
-    <div class="open-when-content">
-
-        <p class="small-title">
-            OPEN WHEN
-        </p>
-
-        <h2>
-            Little letters for different moments.
-        </h2>
-
-        <p class="open-when-description">
-            For the days when you need a little reminder,
-            a little comfort, or simply a little piece of us.
-        </p>
-
-    </div>
-
-    <div
-        class="open-when-container"
-        id="open-when-list"
-    >
-        <p class="open-when-loading">
-            Loading our letters...
-        </p>
-    </div>
-
-    <div
-        class="open-when-actions"
-        id="open-when-actions"
-        style="display: none;"
-    >
-        <button
-            type="button"
-            class="main-button"
-            id="add-open-when-btn"
-        >
-            + Add Letter
-        </button>
-    </div>
-
-</section>
-
-
-<!-- OPEN WHEN MODAL -->
-<div
-    class="open-when-modal"
-    id="open-when-modal"
-    style="display: none;"
->
-
-    <div class="open-when-modal-content">
-
-        <button
-            type="button"
-            class="open-when-modal-close"
-            id="open-when-modal-close"
-        >
-            ×
-        </button>
-
-        <p class="small-title">
-            OPEN WHEN
-        </p>
-
-        <h3 id="open-when-modal-title">
-            Add a Letter
-        </h3>
-
-        <form id="open-when-form">
-
-            <input
-                type="hidden"
-                id="open-when-id"
-            >
-
-            <label for="open-when-title">
-                Open When
-            </label>
-
-            <input
-                type="text"
-                id="open-when-title"
-                placeholder="You're feeling sad"
-                required
-            >
-
-            <label for="open-when-message">
-                Letter
-            </label>
-
-            <textarea
-                id="open-when-message"
-                rows="8"
-                placeholder="Write something for this moment..."
-            ></textarea>
-
-            <button
-                type="submit"
-                class="main-button"
-                id="open-when-submit-btn"
-            >
-                Save Letter
-            </button>
-
-            <p
-                class="open-when-form-message"
-                id="open-when-form-message"
-            ></p>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- BUCKET LIST -->
-<section class="bucket-list" id="bucket-list">
-
-    <div class="bucket-list-content">
-
-        <p class="small-title">
-            OUR BUCKET LIST
-        </p>
-
-        <h2>
-            A list of moments yet to be ours.
-        </h2>
-
-        <p class="bucket-list-description">
-            Little plans, big dreams, and all the beautiful things we hope to experience side by side, and become part of our story.
-        </p>
-
-    </div>
-
-
-    <div
-        class="bucket-list-container"
-        id="bucket-list-container"
-    >
-        <p class="bucket-list-loading">
-            Loading our bucket list...
-        </p>
-    </div>
-
-
-    <div
-        class="bucket-list-actions"
-        id="bucket-list-actions"
-        style="display: none;"
-    >
-
-        <button
-            type="button"
-            class="main-button"
-            id="add-bucket-list-btn"
-        >
-            + Add Bucket List
-        </button>
-
-    </div>
-
-</section>
-
-
-<!-- BUCKET LIST MODAL -->
-<div
-    class="bucket-list-modal"
-    id="bucket-list-modal"
-    style="display: none;"
->
-
-    <div class="bucket-list-modal-content">
-
-        <button
-            type="button"
-            class="bucket-list-modal-close"
-            id="bucket-list-modal-close"
-        >
-            ×
-        </button>
-
-
-        <p class="small-title">
-            OUR BUCKET LIST
-        </p>
-
-
-        <h3 id="bucket-list-modal-title">
-            Add to Our Bucket List
-        </h3>
-
-
-        <form id="bucket-list-form">
-
-            <input
-                type="hidden"
-                id="bucket-list-id"
-            >
-
-
-            <label for="bucket-list-title">
-                What do we want to do?
-            </label>
-
-            <input
-                type="text"
-                id="bucket-list-title"
-                placeholder="Watch the sunrise together"
-                required
-            >
-
-
-            <label for="bucket-list-description">
-                A little description
-            </label>
-
-            <textarea
-                id="bucket-list-description"
-                rows="5"
-                placeholder="Somewhere by the beach..."
-            ></textarea>
-
-
-            <button
-                type="submit"
-                class="main-button"
-                id="bucket-list-submit-btn"
-            >
-                Save Bucket List
-            </button>
-
-
-            <p
-                class="bucket-list-form-message"
-                id="bucket-list-form-message"
-            ></p>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- =========================
-     OUR SOUNDTRACK
-========================= -->
-
-<section class="soundtrack" id="soundtrack">
-
-    <div class="soundtrack-content">
-
-        <p class="small-title">
-            OUR PLAYLIST
-        </p>
-
-        <h2>
-            The songs that became part of us.
-        </h2>
-
-        <p class="soundtrack-description">
-            Some songs are meant to be heard,
-while others become little pieces of a memory,
-tied to a place, a feeling, a moment,
-and somehow, to us.
-        </p>
-
-        <div
-            class="soundtrack-player"
-            id="soundtrack-player"
-        >
-            <p class="soundtrack-loading">
-                Loading our soundtrack...
-            </p>
-        </div>
-
-    </div>
-
-</section>
-
-<section class="timeline" id="timeline">
-
-    <div class="timeline-header">
-
-        <p class="small-title">
-            OUR TIMELINE
-        </p>
-
-        <h2>
-            The little moments that brought us here.
-        </h2>
-
-        <p>
-            Some moments become memories.
-            Some memories become part of our story.
-        </p>
-
-    </div>
-
-    <div
-        class="timeline-actions"
-        id="timeline-actions"
-        style="display: none;"
-    >
-        <button
-            type="button"
-            class="main-button"
-            id="add-timeline-btn"
-        >
-            + Add Timeline
-        </button>
-    </div>
-
-    <div
-        class="timeline-container"
-        id="timeline-list"
-    >
-        <p class="timeline-loading">
-            Loading our timeline...
-        </p>
-    </div>
-
-</section>
-
-
-<!-- =========================
-     TIMELINE MODAL
-========================= -->
-
-<div
-    class="timeline-modal"
-    id="timeline-modal"
-    style="display: none;"
->
-
-    <div class="timeline-modal-content">
-
-        <button
-            type="button"
-            class="timeline-modal-close"
-            id="timeline-modal-close"
-        >
-            ×
-        </button>
-
-        <p class="small-title">
-            OUR TIMELINE
-        </p>
-
-        <h3 id="timeline-modal-title">
-            Add a New Moment
-        </h3>
-
-        <form id="timeline-form">
-
-            <input
-                type="hidden"
-                id="timeline-id"
-            >
-
-            <label for="timeline-date">
-                Date
-            </label>
-
-            <input
-                type="date"
-                id="timeline-date"
-                required
-            >
-
-            <label for="timeline-title">
-                Title
-            </label>
-
-            <input
-                type="text"
-                id="timeline-title"
-                placeholder="The Beginning"
-                required
-            >
-
-            <label for="timeline-location">
-                Location
-            </label>
-
-            <input
-                type="text"
-                id="timeline-location"
-                placeholder="Palembang"
-            >
-
-            <label for="timeline-story">
-                Story
-            </label>
-
-            <textarea
-                id="timeline-story"
-                rows="5"
-                placeholder="Tell the story behind this moment..."
-            ></textarea>
-
-            <label for="timeline-image">
-                Image URL
-            </label>
-
-            <input
-                type="url"
-                id="timeline-image"
-                placeholder="https://..."
-            >
-
-            <button
-                type="submit"
-                class="main-button"
-                id="timeline-submit-btn"
-            >
-                Save Timeline
-            </button>
-
-            <p
-                class="timeline-form-message"
-                id="timeline-form-message"
-            ></p>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- =========================
-     REASONS I LOVE YOU
-========================= -->
-
-<section class="love-reasons" id="love-reasons">
-
-    <div class="love-reasons-header">
-
-        <p class="small-title">
-            REASONS I LOVE YOU
-        </p>
-
-        <h2>
-            Little things, big reasons.
-        </h2>
-
-        <p>
-            There are probably a thousand reasons,
-            but these are some of the little things
-            that make you special to me.
-        </p>
-
-    </div>
-
-
-   <div
-    class="love-reasons-actions"
-    id="love-reasons-actions"
-    style="display: none;"
->
-    <button
-        type="button"
-        class="main-button"
-        id="add-love-reason-btn"
-    >
-        + Add Reason
-    </button>
-</div>
-
-
-    <div
-        class="love-reasons-container"
-        id="love-reasons-list"
-    >
-
-        <p class="love-reasons-loading">
-            Loading our reasons...
-        </p>
-
-    </div>
-
-</section>
-
-<!-- LOVE REASON MODAL -->
-<div
-    class="love-reason-modal"
-    id="love-reason-modal"
-    style="display: none;"
->
-    <div class="love-reason-modal-content">
-
-        <button
-            type="button"
-            class="love-reason-modal-close"
-            id="love-reason-modal-close"
-        >
-            ×
-        </button>
-
-        <p class="small-title">
-            REASONS I LOVE YOU
-        </p>
-
-        <h3 id="love-reason-modal-title">
-            Add a Reason
-        </h3>
-
-        <form id="love-reason-form">
-
-            <input
-                type="hidden"
-                id="love-reason-id"
-            >
-
-            <label for="love-reason-title">
-                Reason
-            </label>
-
-            <input
-                type="text"
-                id="love-reason-title"
-                placeholder="Your kindness"
-                required
-            >
-
-            <label for="love-reason-description">
-                Description
-            </label>
-
-            <textarea
-                id="love-reason-description"
-                rows="5"
-                placeholder="Tell a little story about this reason..."
-            ></textarea>
-
-            <button
-                type="submit"
-                class="main-button"
-                id="love-reason-submit-btn"
-            >
-                Save Reason
-            </button>
-
-            <p
-                class="love-reason-form-message"
-                id="love-reason-form-message"
-            ></p>
-
-        </form>
-
-    </div>
-</div>
-
-    <!-- =========================
-         ABOUT
-    ========================== -->
-
-    <section
-        class="about"
-        id="about"
-    >
-
-        <div class="about-content">
-
-            <p class="small-title">
-                ABOUT US
-            </p>
-
-            <h2>
-                For the moments<br>
-                we don't want to forget, and counting.
-            </h2>
-
-            <p>
-                A little corner of our story, kept here.
-For the photographs we’ll look back on,
-the stories we’ll read again,
-and the little moments that remind us
-of where it all began.
-
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         MEMORY MODAL
-    ========================== -->
-
-    <div
-        class="memory-modal"
-        id="memory-modal"
-        style="display: none;"
-    >
-
-        <div class="memory-modal-overlay"></div>
-
-
-        <div class="memory-modal-box">
-
-            <button
-                type="button"
-                class="modal-close"
-                id="modal-close"
-                aria-label="Close"
-            >
-                ×
-            </button>
-
+        <div class="auth-box">
 
             <p class="small-title">
                 OUR LITTLE ALBUM
             </p>
 
-            <h2 id="modal-title">
-                Add New Memory
-            </h2>
+            <h1>
+                Welcome back.
+            </h1>
+
+            <p class="auth-description">
+                Masuk untuk melanjutkan cerita
+                dan menambahkan kenangan baru.
+            </p>
 
 
-            <form id="memory-form">
+            <form id="login-form">
 
 
-                <!-- ID MEMORY -->
-
-                <input
-                    type="hidden"
-                    id="memory-id"
-                >
-
-
-                <!-- OLD IMAGE PATH -->
-
-                <input
-                    type="hidden"
-                    id="old-image-path"
-                >
-
-
-                <!-- TITLE -->
+                <!-- EMAIL -->
 
                 <div class="form-group">
 
-                    <label for="title">
-                        Judul kenangan
+                    <label for="email">
+                        Email
                     </label>
 
                     <input
-                        type="text"
-                        id="title"
-                        placeholder="Contoh: Hari pertama kita bertemu"
+                        type="email"
+                        id="email"
+                        placeholder="your@email.com"
                         required
                     >
 
                 </div>
 
 
-                <!-- DATE -->
+                <!-- PASSWORD -->
 
                 <div class="form-group">
 
-                    <label for="event-date">
-                        Tanggal
+                    <label for="password">
+                        Password
                     </label>
 
                     <input
-                        type="date"
-                        id="event-date"
-                    >
-
-                </div>
-
-
-                <!-- STORY -->
-
-                <div class="form-group">
-
-                    <label for="story">
-                        Cerita
-                    </label>
-
-                    <textarea
-                        id="story"
-                        placeholder="Tulis cerita tentang kenangan ini..."
+                        type="password"
+                        id="password"
+                        placeholder="Masukkan password"
                         required
-                    ></textarea>
+                    >
 
                 </div>
 
 
-                <!-- PHOTO -->
+                <!-- BUTTON -->
 
-                <div class="form-group">
+                <button
+                    type="submit"
+                    class="auth-button"
+                >
+                    Login
+                </button>
 
-                    <label for="photo">
-                        Foto
-                    </label>
-
-                    <input
-                        type="file"
-                        id="photo"
-                        accept="image/*"
-                        multiple
-                    >
-
-
-                    <!-- PREVIEW FOTO -->
-
-                    <div
-                        class="photo-preview-container"
-                        id="photo-preview-container"
-                        style="display: none;"
-                    >
-
-                        <img
-                            id="preview"
-                            class="preview-image"
-                            alt="Preview foto"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <!-- FORM MESSAGE -->
-
-                <div
-                    class="message"
-                    id="form-message"
-                ></div>
-
-
-                <!-- FORM BUTTONS -->
-
-                <div class="modal-actions">
-
-                    <button
-                        type="submit"
-                        class="btn"
-                        id="save-memory-btn"
-                    >
-                        Save Memory
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        id="cancel-btn"
-                    >
-                        Cancel
-                    </button>
-
-                </div>
 
             </form>
 
+
+            <!-- MESSAGE -->
+
+            <p
+                id="login-message"
+                class="auth-message"
+            ></p>
+
+
+            <!-- REGISTER -->
+
+            <p class="auth-switch">
+
+                Belum punya akun?
+
+                <a href="register.html">
+                    Create an account
+                </a>
+
+            </p>
+
         </div>
 
     </div>
-
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer>
-
-        <p>
-            Made with love for our little memories.
-        </p>
-
-        <p>
-            © 2026 MOCANO'
-        </p>
-
-    </footer>
-
-
-
-    <!-- =========================
-         SUPABASE
-    ========================== -->
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script src="config.js"></script>
-    <script src="index.js"></script>
-    <script src="soundtrack.js"></script>
-    <script src="timeline.js"></script>
-    <script src="love-reasons.js"></script>
-    <script src="random-memory.js"></script>
-    <script src="open-when.js"></script>
-    <script src="bucket-list.js"></script>
-    
-
-<!-- =====================================================
-     MEMORY DETAIL MODAL
-===================================================== -->
-
-<div
-    class="memory-detail-modal"
-    id="memory-detail-modal"
-    style="display: none;"
->
-
-    <div class="memory-detail-content">
-
-        <button
-            type="button"
-            class="memory-detail-close"
-            id="memory-detail-close"
-        >
-            &times;
-        </button>
-
-
-        <!-- TITLE -->
-
-        <div class="memory-detail-header">
-
-            <p
-                class="small-title"
-                id="detail-memory-date"
-            ></p>
-
-            <h2
-                id="detail-memory-title"
-            ></h2>
-
-        </div>
-
-
-        <!-- PHOTOS -->
-
-        <div
-            class="memory-detail-gallery"
-            id="memory-detail-gallery"
-        >
-        </div>
-
-
-        <!-- STORY -->
-
-        <div class="memory-detail-story">
-
-            <p
-                id="detail-memory-story"
-            ></p>
-
-        </div>
-
-
-        <!-- OWNER ACTIONS -->
-
-        <div
-            class="memory-detail-actions"
-            id="memory-detail-actions"
-        >
-
-            <button
-                type="button"
-                class="main-button"
-                id="detail-add-photo-btn"
-            >
-                + Add Photo
-            </button>
-
-        </div>
-
-
-        <!-- ADD PHOTO INPUT -->
-
-        <input
-            type="file"
-            id="detail-photo-input"
-            accept="image/*"
-            multiple
-            style="display: none;"
-        >
-
-    </div>
-
-</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth.js"></script>
 
 </body>
 
