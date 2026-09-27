@@ -3479,146 +3479,186 @@ body.modal-open {
     margin: 0 auto;
 }
 
-
 /* =========================
-   CARD
+   LOVE REASON CARD
 ========================= */
 
 .love-reason-card {
-    position: relative;
-
-    height: 230px;
-
+    height: 260px;
     padding: 25px;
 
     background: #f8f5f0;
-
     border-radius: 12px;
 
-    box-shadow:
-        0 15px 35px
-        rgba(0, 0, 0, 0.08);
-
-    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 
     display: flex;
     flex-direction: column;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    cursor: pointer;
 
     transition:
         transform 0.25s ease,
         box-shadow 0.25s ease;
 }
 
-
 .love-reason-card:hover {
     transform: translateY(-5px);
-
-    box-shadow:
-        0 20px 40px
-        rgba(0, 0, 0, 0.12);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 
-/* =========================
-   NUMBER
-========================= */
+/* NUMBER */
 
 .love-reason-number {
-    margin-bottom: 35px;
+    flex-shrink: 0;
+
+    margin-bottom: 15px;
 
     color: #9d8060;
-
     font-size: 13px;
-
     font-weight: bold;
-
     letter-spacing: 3px;
 }
 
 
-/* =========================
-   CONTENT
-========================= */
-
-.love-reason-content h3 {
-    margin-bottom: 15px;
-
-    font-family: Georgia, serif;
-
-    font-size: 22px;
-
-    font-weight: normal;
-
-    line-height: 1.25;
-
-    color: #3f3831;
-}
-
+/* CONTENT */
 
 .love-reason-card-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.love-reason-content {
+    overflow: hidden;
+}
+
+.love-reason-content h3 {
+    margin: 0 0 10px;
+
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 1.3;
+
+    color: #3f3831;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
 }
 
 .love-reason-content > p {
+    margin: 0;
+
     color: #6f665e;
-
-    font-size: 8px;
-
+    font-size: 13px;
     line-height: 1.7;
 
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 4;
 
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 
 /* =========================
-   CARD ACTIONS
+   EDIT / DELETE
 ========================= */
 
 .love-reason-card-actions {
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-top: auto;
-    padding-top: 16px;
+
+    gap: 12px;
+
+    margin-top: 15px;
 }
 
 .love-reason-edit-btn,
 .love-reason-delete-btn {
     border: none;
     background: transparent;
-    padding: 0;
-    margin: 0;
 
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.3px;
+    padding: 5px 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
 
     cursor: pointer;
 
-    transition:
-        opacity 0.2s ease,
-        color 0.2s ease;
+    white-space: nowrap;
 }
 
 .love-reason-edit-btn {
-    color: #6f655d;
+    color: #6f6255;
 }
 
 .love-reason-delete-btn {
-    color: #9a8178;
+    color: #a46c65;
 }
 
 .love-reason-edit-btn:hover,
 .love-reason-delete-btn:hover {
-    opacity: 0.55;
+    opacity: 0.6;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .love-reason-card {
+        height: 250px;
+        padding: 22px;
+    }
+
+    .love-reason-content h3 {
+        font-size: 21px;
+    }
+
+    .love-reason-content > p {
+        font-size: 13px;
+        line-height: 1.7;
+
+        -webkit-line-clamp: 4;
+    }
+
+    .love-reason-card-actions {
+        margin-top: 12px;
+        gap: 12px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .love-reason-card {
+        height: 240px;
+        padding: 20px;
+    }
+
+    .love-reason-content h3 {
+        font-size: 20px;
+    }
+
+    .love-reason-content > p {
+        font-size: 12.5px;
+        -webkit-line-clamp: 3;
+    }
 }
 
 /* =========================
@@ -3816,6 +3856,48 @@ body.modal-open {
     font-size: 13px;
 }
 
+@media (max-width: 768px) {
+    .love-reasons {
+        padding: 90px 18px;
+    }
+
+    .love-reasons-header {
+        margin-bottom: 40px;
+    }
+
+    .love-reasons-header h2 {
+        font-size: 36px;
+    }
+
+    .love-reasons-container {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .love-reason-card {
+        min-height: 0;
+        height: auto;
+        padding: 22px;
+    }
+
+    .love-reason-number {
+        margin-bottom: 16px;
+    }
+
+    .love-reason-content h3 {
+        font-size: 21px;
+    }
+
+    .love-reason-content > p {
+        font-size: 13px;
+        line-height: 1.7;
+        -webkit-line-clamp: 5;
+    }
+
+    .love-reason-card-actions {
+        margin-top: 18px;
+    }
+}
 
 /* =========================
    RANDOM MEMORY
@@ -6274,4 +6356,679 @@ body.modal-open {
 .memory-edit-btn:hover,
 .memory-delete-btn:hover {
     opacity: 0.65 !important;
+}
+
+/* =========================================================
+   MEMORY PHOTO LIGHTBOX
+========================================================= */
+
+.memory-photo-lightbox {
+    position: fixed;
+    inset: 0;
+
+    z-index: 10000;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 80px;
+
+    background: rgba(24, 21, 18, 0.94);
+
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+}
+
+
+.memory-photo-lightbox.active {
+    display: flex;
+
+    opacity: 1;
+}
+
+
+/* =========================
+   LIGHTBOX STAGE
+========================= */
+
+.memory-lightbox-stage {
+    position: relative;
+
+    width: min(1100px, 100%);
+    height: min(85vh, 800px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+}
+
+
+/* =========================
+   LIGHTBOX IMAGE
+========================= */
+
+.memory-lightbox-image {
+    display: block;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 20px 70px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.memory-lightbox-close {
+    position: fixed;
+
+    top: 22px;
+    right: 28px;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 3;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.memory-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.18);
+
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.memory-lightbox-nav {
+    position: fixed;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    color: #ffffff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 3;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.memory-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.20);
+}
+
+
+.memory-lightbox-prev {
+    left: 25px;
+}
+
+
+.memory-lightbox-next {
+    right: 25px;
+}
+
+
+.memory-lightbox-prev:hover {
+    transform:
+        translateY(-50%)
+        translateX(-2px);
+}
+
+
+.memory-lightbox-next:hover {
+    transform:
+        translateY(-50%)
+        translateX(2px);
+}
+
+
+/* =========================
+   COUNTER
+========================= */
+
+.memory-lightbox-counter {
+    position: absolute;
+
+    left: 50%;
+    bottom: -32px;
+
+    transform: translateX(-50%);
+
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 13px;
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .memory-photo-lightbox {
+        padding: 30px 15px 70px;
+    }
+
+
+    .memory-lightbox-stage {
+        width: 100%;
+        height: 75vh;
+    }
+
+
+    .memory-lightbox-image {
+        max-width: 100%;
+        max-height: 75vh;
+
+        border-radius: 5px;
+    }
+
+
+    .memory-lightbox-close {
+        top: 15px;
+        right: 15px;
+
+        width: 40px;
+        height: 40px;
+
+        font-size: 29px;
+    }
+
+
+    .memory-lightbox-nav {
+        width: 40px;
+        height: 40px;
+
+        font-size: 34px;
+
+        background: rgba(255, 255, 255, 0.14);
+    }
+
+
+    .memory-lightbox-prev {
+        left: 10px;
+    }
+
+
+    .memory-lightbox-next {
+        right: 10px;
+    }
+
+
+    .memory-lightbox-counter {
+        bottom: -28px;
+
+        font-size: 12px;
+    }
+
+}
+
+/* =========================================================
+   FINAL MOBILE RESPONSIVE FIX
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* =========================
+       GENERAL
+    ========================= */
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .navbar {
+        padding: 16px 18px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+        min-height: 100svh;
+        padding: 120px 20px 70px;
+    }
+
+    .hero h1 {
+        font-size: clamp(40px, 12vw, 52px);
+        letter-spacing: -1px;
+    }
+
+    .hero-description {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       SECTION HEADERS
+    ========================= */
+
+    .memories-header {
+        padding: 100px 20px 90px;
+    }
+
+    .memories-header .section-heading h2,
+    .love-reasons-header h2,
+    .movie-list-header h2,
+    .open-when h2,
+    .bucket-list h2,
+    .random-memory h2 {
+        font-size: 36px;
+        line-height: 1.15;
+    }
+
+    .memories-header .section-heading > p:last-child,
+    .love-reasons-header > p:last-child,
+    .movie-list-header p:last-child,
+    .open-when-description,
+    .bucket-list-description {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+
+    /* =========================
+       MEMORY
+    ========================= */
+
+    .memories {
+        padding-bottom: 80px;
+    }
+
+    .memory-actions {
+        width: auto;
+        margin: 30px 20px;
+        justify-content: flex-end;
+    }
+
+    .memory-container,
+    .memory-grid {
+        width: auto;
+        margin: 0 18px;
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .memory-card {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .memory-card .memory-image {
+        height: 240px;
+    }
+
+    .memory-content,
+    .memory-card-info,
+    .dashboard-card-content {
+        padding: 20px;
+    }
+
+    .memory-content h3,
+    .dashboard-card-content h3 {
+        font-size: 23px;
+        line-height: 1.3;
+    }
+
+    .memory-story,
+    .dashboard-card-content .memory-story {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .memory-card-actions,
+    .dashboard-actions {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+
+    /* =========================
+       MOVIE
+    ========================= */
+
+    .movie-list {
+        padding: 90px 18px;
+    }
+
+    .movie-list-header {
+        margin-bottom: 35px;
+    }
+
+    .movie-list-container {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .movie-card {
+        width: 100%;
+        min-height: 145px;
+    }
+
+    .movie-card-poster {
+        flex: 0 0 95px;
+        width: 95px;
+        height: 145px;
+    }
+
+    .movie-card-info {
+        min-width: 0;
+        padding: 15px;
+    }
+
+    .movie-card-info h3 {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+
+    .movie-card-info p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================
+       REASONS
+    ========================= */
+
+    .love-reasons {
+        padding: 90px 18px;
+    }
+
+    .love-reasons-header {
+        margin-bottom: 40px;
+    }
+
+    .love-reasons-container {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .love-reason-card {
+        height: auto;
+        min-height: 220px;
+        padding: 22px;
+    }
+
+    .love-reason-number {
+        margin-bottom: 20px;
+    }
+
+    .love-reason-content h3 {
+        font-size: 21px;
+        line-height: 1.3;
+    }
+
+    .love-reason-content > p {
+        font-size: 13px;
+        line-height: 1.7;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
+    }
+
+    .love-reason-card-actions {
+        margin-top: 18px;
+        padding-top: 14px;
+
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        flex-shrink: 0;
+    }
+
+    .love-reason-edit-btn,
+    .love-reason-delete-btn {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+
+    /* =========================
+       OPEN WHEN
+    ========================= */
+
+    .open-when {
+        padding: 90px 18px;
+    }
+
+    .open-when-container {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .open-when-card {
+        padding: 25px 22px;
+    }
+
+
+    /* =========================
+       BUCKET LIST
+    ========================= */
+
+    .bucket-list {
+        padding: 90px 18px;
+    }
+
+    .bucket-list-container {
+        width: 100%;
+    }
+
+
+    /* =========================
+       TIMELINE
+    ========================= */
+
+    .timeline {
+        padding: 90px 18px;
+    }
+
+    .timeline-header h2 {
+        font-size: 36px;
+    }
+
+    .timeline-container {
+        padding-left: 30px;
+    }
+
+    .timeline-content {
+        padding: 0 !important;
+        text-align: left !important;
+    }
+
+    .timeline-content h3 {
+        font-size: 21px;
+    }
+
+    .timeline-story {
+        font-size: 13px;
+    }
+
+    .timeline-image {
+        width: 100%;
+        max-width: 100%;
+        height: 180px;
+        margin: 18px 0 0;
+    }
+
+
+    /* =========================
+       MODALS
+    ========================= */
+
+    .memory-modal,
+    .timeline-modal,
+    .love-reason-modal,
+    .random-memory-modal {
+        padding: 12px;
+    }
+
+    .memory-modal-box,
+    .timeline-modal-content,
+    .love-reason-modal-content,
+    .random-memory-modal-content {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92svh;
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+
+    .modal-actions,
+    .movie-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .modal-actions button,
+    .movie-form-actions button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   EXTRA SMALL PHONES
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .navbar {
+        padding: 15px 14px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .hero {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero h1 {
+        font-size: 38px;
+    }
+
+    .memory-container,
+    .memory-grid {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    .memory-card .memory-image {
+        height: 210px;
+    }
+
+    .memory-content,
+    .memory-card-info,
+    .dashboard-card-content {
+        padding: 18px;
+    }
+
+    .movie-list {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .movie-card-poster {
+        flex-basis: 85px;
+        width: 85px;
+        height: 130px;
+    }
+
+    .movie-card-info {
+        padding: 13px;
+    }
+
+    .love-reasons {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .love-reason-card {
+        padding: 20px;
+    }
+
 }
