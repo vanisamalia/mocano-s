@@ -110,6 +110,7 @@ async function loadMovies() {
             ascending: false
         });
 
+
     if (error) {
 
         console.error(
@@ -174,6 +175,7 @@ async function getMovieRatings(movieId) {
         .select("*")
         .eq("movie_id", movieId);
 
+
     if (error) {
 
         console.error(
@@ -183,6 +185,7 @@ async function getMovieRatings(movieId) {
 
         return [];
     }
+
 
     return data || [];
 }
@@ -410,6 +413,57 @@ function renderMovieDetail(movie, ratings) {
 
 
     renderMovieRatings(ratings);
+
+    updateMovieDetailActions(movie);
+}
+
+
+/* =========================
+   UPDATE MOVIE DETAIL ACTIONS
+========================= */
+
+async function updateMovieDetailActions(movie) {
+
+    if (!movieDetailActions) return;
+
+
+    const user =
+        await getCurrentMovieUser();
+
+
+    /*
+       Edit & Delete hanya muncul jika:
+       1. User sudah login
+       2. Movie adalah milik user tersebut
+    */
+
+    const canManageMovie =
+        !!user &&
+        movie.created_by === user.id;
+
+
+    movieDetailActions.style.display =
+        canManageMovie
+            ? "flex"
+            : "none";
+
+
+    if (editMovieBtn) {
+
+        editMovieBtn.style.display =
+            canManageMovie
+                ? ""
+                : "none";
+    }
+
+
+    if (deleteMovieBtn) {
+
+        deleteMovieBtn.style.display =
+            canManageMovie
+                ? ""
+                : "none";
+    }
 }
 
 
@@ -435,6 +489,7 @@ async function renderMovieRatings(ratings) {
                     rating.user_id === user.id
             ) || null;
 
+
         partnerRating =
             ratings.find(
                 rating =>
@@ -443,8 +498,8 @@ async function renderMovieRatings(ratings) {
 
     } else {
 
-        partnerRating = ratings[0] || null;
-
+        partnerRating =
+            ratings[0] || null;
     }
 
 
@@ -535,6 +590,7 @@ async function renderMovieRatings(ratings) {
 function createRatingButtons(currentRating) {
 
     let buttons = "";
+
 
     for (let i = 1; i <= 5; i++) {
 
@@ -662,6 +718,7 @@ function calculateAverageRating(ratings) {
         !ratings ||
         ratings.length === 0
     ) {
+
         return null;
     }
 
@@ -686,6 +743,7 @@ function createStars(rating) {
 
     let stars = "";
 
+
     for (let i = 1; i <= 5; i++) {
 
         stars +=
@@ -693,6 +751,7 @@ function createStars(rating) {
                 ? "★"
                 : "☆";
     }
+
 
     return stars;
 }
@@ -706,20 +765,39 @@ if (addMovieBtn) {
 
     addMovieBtn.addEventListener(
         "click",
-        () => {
+        async () => {
+
+            const user =
+                await getCurrentMovieUser();
+
+
+            if (!user) {
+
+                alert(
+                    "Silakan login terlebih dahulu."
+                );
+
+                return;
+            }
+
 
             editingMovie = null;
+
 
             movieModalTitle.textContent =
                 "Add a Movie";
 
+
             movieForm.reset();
+
 
             movieFormMessage.textContent =
                 "";
 
+
             movieModal.style.display =
                 "flex";
+
 
             document.body.style.overflow =
                 "hidden";
@@ -758,6 +836,7 @@ if (movieForm) {
             const title =
                 movieTitle.value.trim();
 
+
             if (!title) {
 
                 movieFormMessage.textContent =
@@ -785,7 +864,6 @@ if (movieForm) {
 
                 note:
                     movieNote.value.trim() || null
-
             };
 
 
@@ -807,6 +885,7 @@ if (movieForm) {
                             user.id
                         );
 
+
                 error = result.error;
 
             } else {
@@ -819,6 +898,7 @@ if (movieForm) {
                             created_by:
                                 user.id
                         });
+
 
                 error = result.error;
             }
@@ -854,9 +934,45 @@ if (editMovieBtn) {
 
     editMovieBtn.addEventListener(
         "click",
-        () => {
+        async () => {
 
             if (!currentMovie) return;
+
+
+            /*
+               CEK LOGIN
+            */
+
+            const user =
+                await getCurrentMovieUser();
+
+
+            if (!user) {
+
+                alert(
+                    "Silakan login terlebih dahulu untuk mengedit movie."
+                );
+
+                return;
+            }
+
+
+            /*
+               CEK PEMILIK MOVIE
+            */
+
+            if (
+                currentMovie.created_by !==
+                user.id
+            ) {
+
+                alert(
+                    "Kamu tidak memiliki akses untuk mengedit movie ini."
+                );
+
+                return;
+            }
+
 
             editingMovie =
                 currentMovie;
@@ -865,18 +981,23 @@ if (editMovieBtn) {
             movieTitle.value =
                 currentMovie.title || "";
 
+
             moviePoster.value =
                 currentMovie.poster_url || "";
 
+
             movieDescription.value =
                 currentMovie.description || "";
+
 
             movieStatus.value =
                 currentMovie.status ||
                 "Want to Watch";
 
+
             movieWatchedDate.value =
                 currentMovie.watched_date || "";
+
 
             movieNote.value =
                 currentMovie.note || "";
@@ -893,8 +1014,13 @@ if (editMovieBtn) {
             movieDetailModal.style.display =
                 "none";
 
+
             movieModal.style.display =
                 "flex";
+
+
+            document.body.style.overflow =
+                "hidden";
         }
     );
 }
@@ -913,11 +1039,39 @@ if (deleteMovieBtn) {
             if (!currentMovie) return;
 
 
+            /*
+               CEK LOGIN
+            */
+
             const user =
                 await getCurrentMovieUser();
 
 
-            if (!user) return;
+            if (!user) {
+
+                alert(
+                    "Silakan login terlebih dahulu untuk menghapus movie."
+                );
+
+                return;
+            }
+
+
+            /*
+               CEK PEMILIK MOVIE
+            */
+
+            if (
+                currentMovie.created_by !==
+                user.id
+            ) {
+
+                alert(
+                    "Kamu tidak memiliki akses untuk menghapus movie ini."
+                );
+
+                return;
+            }
 
 
             const confirmed =
@@ -975,11 +1129,14 @@ function closeMovieModal() {
 
     if (!movieModal) return;
 
+
     movieModal.style.display =
         "none";
 
+
     document.body.style.overflow =
         "";
+
 
     editingMovie = null;
 }
@@ -989,11 +1146,14 @@ function closeMovieDetail() {
 
     if (!movieDetailModal) return;
 
+
     movieDetailModal.style.display =
         "none";
 
+
     document.body.style.overflow =
         "";
+
 
     currentMovie = null;
 }
@@ -1033,8 +1193,10 @@ if (movieModal) {
         event => {
 
             if (
-                event.target === movieModal
+                event.target ===
+                movieModal
             ) {
+
                 closeMovieModal();
             }
 
@@ -1050,8 +1212,10 @@ if (movieDetailModal) {
         event => {
 
             if (
-                event.target === movieDetailModal
+                event.target ===
+                movieDetailModal
             ) {
+
                 closeMovieDetail();
             }
 
@@ -1070,11 +1234,31 @@ async function updateMovieAuthUI() {
         await getCurrentMovieUser();
 
 
-    if (!movieListActions) return;
+    if (movieListActions) {
+
+        movieListActions.style.display =
+            user
+                ? "flex"
+                : "none";
+    }
 
 
-    movieListActions.style.display =
-        user ? "flex" : "none";
+    /*
+       Kalau detail movie sedang terbuka,
+       update tombol Edit/Delete.
+    */
+
+    if (
+        currentMovie &&
+        movieDetailModal &&
+        movieDetailModal.style.display ===
+            "flex"
+    ) {
+
+        await updateMovieDetailActions(
+            currentMovie
+        );
+    }
 }
 
 
@@ -1086,8 +1270,10 @@ function formatMovieDate(dateString) {
 
     if (!dateString) return "";
 
+
     const date =
         new Date(dateString);
+
 
     return date.toLocaleDateString(
         "en-US",
@@ -1102,16 +1288,36 @@ function formatMovieDate(dateString) {
 
 function escapeHTML(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
         return "";
     }
 
+
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
@@ -1126,5 +1332,25 @@ document.addEventListener(
         await updateMovieAuthUI();
 
         await loadMovies();
+
+
+        /*
+           Update UI ketika login/logout.
+        */
+
+        db.auth.onAuthStateChange(
+            async () => {
+
+                await updateMovieAuthUI();
+
+
+                if (currentMovie) {
+
+                    await updateMovieDetailActions(
+                        currentMovie
+                    );
+                }
+            }
+        );
     }
 );
