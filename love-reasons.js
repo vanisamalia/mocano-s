@@ -56,7 +56,9 @@ async function loadLoveReasons() {
 }
 
 
-//* =========================RENDER LOVE REASONS========================= */
+/* =========================
+   RENDER LOVE REASONS
+========================= */
 
 async function renderLoveReasons() {
 
@@ -105,46 +107,62 @@ async function renderLoveReasons() {
                         data-love-reason-id="${item.id}"
                     >
 
+                        <!-- NUMBER -->
+                        <div class="love-reason-number">
+                            ${String(
+                                loveReasonsData.indexOf(item) + 1
+                            ).padStart(2, "0")}
+                        </div>
+
+
+                        <!-- CONTENT -->
                         <div class="love-reason-card-content">
 
-                            <h3>
-                                ${escapeLoveReasonHTML(item.title)}
-                            </h3>
+                            <div class="love-reason-content">
 
-                            <p>
-                                ${escapeLoveReasonHTML(
-                                    item.description || ""
-                                )}
-                            </p>
+                                <h3>
+                                    ${escapeLoveReasonHTML(
+                                        item.title
+                                    )}
+                                </h3>
 
+                                <p>
+                                    ${escapeLoveReasonHTML(
+                                        item.description || ""
+                                    )}
+                                </p>
 
-                            ${
-                                isOwner
-                                    ? `
-                                        <div class="love-reason-card-actions">
-
-                                            <button
-                                                type="button"
-                                                class="love-reason-edit-btn"
-                                                data-id="${item.id}"
-                                            >
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                class="love-reason-delete-btn"
-                                                data-id="${item.id}"
-                                            >
-                                                Delete
-                                            </button>
-
-                                        </div>
-                                    `
-                                    : ""
-                            }
+                            </div>
 
                         </div>
+
+
+                        <!-- ACTIONS -->
+                        ${
+                            isOwner
+                                ? `
+                                    <div class="love-reason-card-actions">
+
+                                        <button
+                                            type="button"
+                                            class="love-reason-edit-btn"
+                                            data-id="${item.id}"
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="love-reason-delete-btn"
+                                            data-id="${item.id}"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </div>
+                                `
+                                : ""
+                        }
 
                     </article>
                 `;
@@ -204,7 +222,6 @@ async function renderLoveReasons() {
 
     attachLoveReasonActions();
 }
-
 
 /* =========================
    OPEN LOVE REASON DETAIL
